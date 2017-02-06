@@ -34,7 +34,8 @@
     "uptime",
     "vote",
     "xkcd",
-    "weather"
+    "weather",
+    "server"
   ],
   "openshift": {
     "heartbeat_channel": "keepalive",
