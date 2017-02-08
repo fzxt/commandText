@@ -35,7 +35,7 @@ function putStreamInObject(topic, user, link, description) {
 }
 
 function createChannel(title, bot, message, topic, user) {
-  return message.guild.createChannel(title, 'text').then(channel => {
+  return message.guild.createChannel(title, 'text').then((channel) => {
     streams[topic][user].channel = channel;
     return channel;
   });
@@ -92,19 +92,15 @@ const commands = {
       streams[topic][user.id].channel = existingChannel;
       streams[topic][user.id].link = link;
 
-      existingChannel.setTopic(link).catch(err => {
-        existingChannel.sendMessage('There was an error setting the existings channel topic!');
-      });
+      existingChannel.setTopic(link).catch(err =>
+        existingChannel.sendMessage('There was an error setting the existings channel topic!'));
 
       return message.channel.sendMessage('Channel already exists.. Updated stream link!');
     }
     return createChannel(channelFormat, bot, message, topic, user.id)
-      .then((createdChannel) => setTopicToLink(createdChannel, link, bot, topic, user.id))
-      .then((channelWithTopic) =>
-        message.channel.sendMessage(`Created ${channelWithTopic}!`))
-      .catch((err) => {
-        message.channel.sendMessage(`Sorry, could not create channel (${err})`);
-      });
+      .then(createdChannel => setTopicToLink(createdChannel, link, bot, topic, user.id))
+      .then(channelWithTopic => message.channel.sendMessage(`Created ${channelWithTopic}!`))
+      .catch(err => message.channel.sendMessage(`Sorry, could not create channel (${err})`));
   },
 
   remove: function handleRemoveStream(bot, message) {
@@ -118,15 +114,14 @@ const commands = {
       return;
     }
 
-    topics.forEach(topic => {
+    topics.forEach((topic) => {
       if (streams[topic][id]) {
         const channelToDelete = streams[topic][id].channel;
 
         deleteStreamInObject(topic, id);
 
-        channelToDelete.delete().catch(err => {
-          message.channel.sendMessage('Sorry, could not delete channel');
-        });
+        channelToDelete.delete().catch(err =>
+          message.channel.sendMessage('Sorry, could not delete channel'));
 
         message.channel.sendMessage(
           `Removed ${user || message.author} from active streamers list and deleted #${channelToDelete.name}`);
@@ -146,7 +141,7 @@ const commands = {
       return message.channel.sendMessage('No streams! :frowning:');
     }
 
-    topics.forEach(topic => {
+    topics.forEach((topic) => {
       buildMessage += `**\n${topic}**\n`;
       Object.keys(streams[topic]).forEach((stream, index) => {
         const link = streams[topic][stream].link;
@@ -166,11 +161,9 @@ const commands = {
     }
 
     console.log('Removing all stream channels..');
-    bot.client.guilds.first().channels.forEach(channel => {
-      if (channel && channel.name !== undefined && channel.name.startsWith('stream')) {
-        channel.delete();
-      }
-    });
+    bot.client.guilds.first().channels.filter(channel =>
+      channel && channel.name !== undefined && channel.name.startsWith('stream'))
+    .forEach(channel => channel.delete());
 
     Object.keys(streams).forEach(topic => delete streams[topic]);
   },

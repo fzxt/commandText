@@ -2,25 +2,23 @@ function fixEscapes(str) {
   return str.replace(/[^a-z0-9|]/ig, '\\$&');
 }
 
-
 let proLangRe;
 let pros;
-const TERMS_INCLUDE = './proTerms.js';
 
 function updateProsMatcher() {
   /* eslint global-require: off */
-  delete require.cache[require.resolve(TERMS_INCLUDE)];
+  delete require.cache[require.resolve('./proTerms.js')];
   pros = {};
 
-  const terms = require(TERMS_INCLUDE)
+  const terms = require('./proTerms.js')
     .filter(termList => termList[0].length > 0)
     .map((termList) => {
       const termPros = new Set();
       termPros.original = termList[0];
 
-      for (const term of termList) {
+      termList.forEach((term) => {
         pros[term.toLowerCase()] = termPros;
-      }
+      });
 
       return fixEscapes(termList.join('|'));
     });
@@ -73,7 +71,7 @@ module.exports = {
     'pro reset - reload all the pro data (mod only)',
   ],
 
-  run: (bot, message, cmdArgs) => {
+  run(bot, message, cmdArgs) {
     if (!cmdArgs) {
       return true;
     }
@@ -81,7 +79,7 @@ module.exports = {
     let lang = cmdArgs.toLowerCase().trim();
 
     if (lang === 'reset' && bot.isAdminOrMod(message.member)) {
-      return void loadAndMatchPros(bot).then(() => {
+      loadAndMatchPros(bot).then(() => {
         message.channel.sendMessage('Pros list refreshed.');
         return false;
       })
@@ -89,11 +87,12 @@ module.exports = {
         console.error(err);
         console.error(err.stack);
       });
+      return false;
     }
 
     proLangRe.lastIndex = 0;
     const match = proLangRe.exec(lang);
-    lang = (match && match[1] || lang).toLowerCase();
+    lang = ((match && match[1]) || lang).toLowerCase();
 
     const foundPros = getPros(bot, lang);
     message.channel.sendMessage(foundPros ?
@@ -102,7 +101,7 @@ module.exports = {
     return false;
   },
 
-  init: bot => {
+  init(bot) {
     console.log('Loading pros...');
     loadAndMatchPros(bot)
       .then(() => {

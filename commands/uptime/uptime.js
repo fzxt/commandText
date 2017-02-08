@@ -12,9 +12,9 @@ const MAGNITUDES = [
 ];
 
 const getUptime = () => {
-  let diff = Math.abs((new Date) - startTime);
+  let diff = Math.abs(new Date() - startTime);
   return MAGNITUDES.reduce((out, m) => {
-    const current = diff / m[0] | 0;
+    const current = Math.floor(diff / m[0]);
     diff %= m[0];
     if (out.length || current) {
       out.push(`${current} ${m[1]}`);

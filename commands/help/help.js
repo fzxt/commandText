@@ -37,7 +37,7 @@ module.exports = {
 
   init: () => {
     console.log('Loading help topics...');
-    getFileList(path.join(__dirname, 'topics')).forEach(fn => {
+    getFileList(path.join(__dirname, 'topics')).forEach((fn) => {
       knownTopics[path.basename(fn, '.txt')] = loadHelpText(path.join(__dirname, 'topics', fn));
     });
   },

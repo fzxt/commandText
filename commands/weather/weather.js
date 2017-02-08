@@ -6,7 +6,7 @@ const geocodeEndpoint = 'https://maps.googleapis.com/maps/api/geocode/json?key=g
 const darkskyEndpoint = 'https://api.darksky.net/forecast/key/lat,lng';
 
 function fahrenheitToCelcius(degree) {
-  return ((degree - 32) * 5 / 9).toFixed(0);
+  return (((degree - 32) * 5) / 9).toFixed(0);
 }
 
 module.exports = {

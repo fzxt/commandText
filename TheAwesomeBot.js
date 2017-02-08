@@ -17,7 +17,7 @@ class TheAwesomeBot {
   }
 
   onMessage() {
-    return (message => {
+    return (message) => {
       // don't respond to own messages
       if (this.client.user.username === message.author.username) {
         return;
@@ -59,33 +59,29 @@ class TheAwesomeBot {
         }
         message.channel.sendMessage('```\n' + usage + '\n```');
       }
-    });
+    };
   }
 
   onReady() {
     return (() => {
       console.log('\nConnected to discord server!');
       console.log('Running initializations...');
-      Object.keys(this.commands).forEach(cmd => {
-        if (typeof this.commands[cmd].init === 'function') {
-          this.commands[cmd].init(this);
-        }
-      });
+      Object.keys(this.commands).filter(cmd =>
+        typeof this.commands[cmd].init === 'function')
+      .forEach(cmd => this.commands[cmd].init(this));
     });
   }
 
   serverNewMember() {
-    return ((server, user) => {
-      this.client.sendMessage(user, this.usageList);
-    });
+    return ((server, user) => this.client.sendMessage(user, this.usageList));
   }
 
-  onDisconnected() {
-    return (() =>
-      console.warn('Bot has been disconnected from server...'));
+  static onDisconnected() {
+    return () =>
+      console.warn('Bot has been disconnected from server...');
   }
 
-  onError() {
+  static onError() {
     return ((err) => {
       console.error('error: ', err);
       console.error(err.trace);
@@ -94,9 +90,9 @@ class TheAwesomeBot {
 
   loadCommands(cmdList) {
     this.usageList = '';
-    cmdList.forEach(cmd => {
+    cmdList.forEach((cmd) => {
       const fullpath = path.join(__dirname, 'commands', cmd, `${cmd}.js`);
-      const script = require(fullpath); // eslint-disable-line global-require
+      const script = require(fullpath); // eslint-disable-line global-require, import/no-dynamic-require
       this.commands[cmd] = script;
 
       const usageObj = script.usage;
