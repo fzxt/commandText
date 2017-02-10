@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 const path = require('path');
 const Discord = require('discord.js');
 const Settings = require('./settings.json');
@@ -76,12 +77,12 @@ class TheAwesomeBot {
     return ((server, user) => this.client.sendMessage(user, this.usageList));
   }
 
-  static onDisconnected() {
+  onDisconnected() {
     return () =>
       console.warn('Bot has been disconnected from server...');
   }
 
-  static onError() {
+  onError() {
     return ((err) => {
       console.error('error: ', err);
       console.error(err.trace);
