@@ -28,4 +28,5 @@ module.exports = {
   run: (bot, message) => {
     message.channel.sendMessage(`Uptime: ${getUptime()}`);
   },
+  getUptime: getUptime, // eslint-disable-line object-shorthand
 };
