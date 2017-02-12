@@ -15,6 +15,9 @@ class TheAwesomeBot {
 
     // store the RE as they're expensive to create
     this.cmd_re = new RegExp(`^${this.settings.bot_cmd}\\s+([^\\s]+)\\s*([^]*)\\s*`, 'i');
+
+    // flags if connected and client is ready
+    this.isReady = false;
   }
 
   onMessage() {
@@ -70,6 +73,7 @@ class TheAwesomeBot {
       Object.keys(this.commands).filter(cmd =>
         typeof this.commands[cmd].init === 'function')
       .forEach(cmd => this.commands[cmd].init(this));
+      this.isReady = true;
     });
   }
 
