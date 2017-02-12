@@ -1,8 +1,9 @@
 /* eslint-disable class-methods-use-this */
 const path = require('path');
 const Discord = require('discord.js');
-const Settings = require('./settings.json');
-const Tokens = require('./tokens.json');
+
+const Settings = require(path.join(__dirname, 'settings.json')); // eslint-disable-line import/no-dynamic-require
+const Tokens = require(path.join(__dirname, 'tokens.json')); // eslint-disable-line import/no-dynamic-require
 
 class TheAwesomeBot {
   constructor(token, discordOpt) {
