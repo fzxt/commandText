@@ -132,6 +132,13 @@ class TheAwesomeBot {
     return this.client.login(this.token);
   }
 
+  deinit() {
+    // disconnect gracefully
+    this.isReady = false;
+    // return the promise from "destroy()"
+    return this.client.destroy();
+  }
+
   isAdminOrMod(member) {
     const immuneRoles = new Set(this.settings.voting.immuneRoles);
     const userRoles = new Set(member.roles.array().map(r => r.name));
