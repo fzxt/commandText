@@ -124,7 +124,8 @@ class TheAwesomeBot {
       .on('error', this.onError());
 
     console.log('Connecting...');
-    this.client.login(this.token);
+    // return the promise from "login()"
+    return this.client.login(this.token);
   }
 
   isAdminOrMod(member) {
