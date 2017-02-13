@@ -5,7 +5,7 @@ const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
 
 const MAGNITUDES = [
-  [HOUR, 'minutes'],
+  [HOUR, 'hours'],
   [MINUTE, 'minutes'],
   [SECOND, 'seconds'],
   [1, 'milliseconds'],
