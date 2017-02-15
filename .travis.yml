@@ -3,4 +3,5 @@ sudo: false
 dist: trusty
 
 script:
+  - npm test
   - npm run lint .

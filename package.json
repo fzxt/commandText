@@ -5,7 +5,7 @@
   "main": "TheAwesomeBot.js",
   "scripts": {
     "start": "node start.js",
-    "test": "echo \"No tests yet :( But let it build!\" && exit 0",
+    "test": "node test/*.js | tap-summary --no-progress",
     "lint": "eslint"
   },
   "repository": {
@@ -28,6 +28,8 @@
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.9.0"
+    "eslint-plugin-react": "^6.9.0",
+    "tap-summary": "^3.0.1",
+    "tape": "^4.6.3"
   }
 }
