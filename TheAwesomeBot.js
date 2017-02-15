@@ -12,6 +12,7 @@ class TheAwesomeBot {
     this.settings.tokens = Tokens; // insert tokens into our settings obj
     this.commands = {};
     this.usageList = '';
+    this.getUptime = require('./lib/uptime.js')(new Date()); // eslint-disable-line global-require
     // store the RE as they're expensive to create
     this.cmd_re = new RegExp(`^${this.settings.bot_cmd}\\s+([^\\s]+)\\s*([^]*)\\s*`, 'i');
   }
