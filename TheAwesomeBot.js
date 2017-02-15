@@ -101,10 +101,6 @@ class TheAwesomeBot {
 
   loadCommands(cmdList) {
     this.usageList = '';
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    const uptimeScript = require(path.join(__dirname, 'lib', 'uptime', 'uptime.js'));
-    this.usageList += `\n- ${this.settings.bot_cmd} ${uptimeScript.usage}`;
-    this.commands.uptime = uptimeScript;
 
     cmdList.forEach((cmd) => {
       const fullpath = path.join(__dirname, 'commands', cmd, `${cmd}.js`);
