@@ -24,6 +24,7 @@
     }
   },
   "commands": [
+    "uptime",
     "help",
     "jseval",
     "pro",
