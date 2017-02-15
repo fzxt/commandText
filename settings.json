@@ -27,6 +27,7 @@
     "repo":"samoxive/awesomebot"
   },
   "commands": [
+    "uptime",
     "help",
     "jseval",
     "pro",
