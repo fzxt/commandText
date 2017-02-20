@@ -10,7 +10,10 @@ function fahrenheitToCelcius(degree) {
 }
 
 module.exports = {
-  usage: 'weather <adress> - brings current weather info for given address',
+  usage: [
+    'weather <address> - brings current weather info for given address',
+    'weather -v <address> - brings additional weather info for given address',
+  ],
 
   init: (bot) => {
     weatherConfig = bot.settings.weather;
@@ -18,11 +21,15 @@ module.exports = {
 
   run: (bot, message, cmdArgs) => {
     if (!cmdArgs) return true;
-
+    let verbose = false;
+    if (cmdArgs.split(' ')[0] === '-v') {
+      verbose = true;
+      cmdArgs = cmdArgs.split(' ').slice(1).join(' ');
+    }
     // get geocode info
     let requestURL = geocodeEndpoint
-                            .replace('gkey', weatherConfig.geocode_api_key || bot.settings.tokens.google_geocode)
-                            .replace('input', cmdArgs);
+      .replace('gkey', weatherConfig.geocode_api_key || bot.settings.tokens.google_geocode)
+      .replace('input', cmdArgs);
     // do percentage encoding
     requestURL = encodeURI(requestURL);
 
@@ -43,9 +50,9 @@ module.exports = {
       const coordinate = geocodeData.results[0].geometry.location;
       // get weather data
       requestURL = darkskyEndpoint
-                          .replace('key', weatherConfig.darksky_api_key || bot.settings.tokens.darksky)
-                          .replace('lat', coordinate.lat)
-                          .replace('lng', coordinate.lng);
+        .replace('key', weatherConfig.darksky_api_key || bot.settings.tokens.darksky)
+        .replace('lat', coordinate.lat)
+        .replace('lng', coordinate.lng);
 
       request(requestURL, (error, response, body) => {
         const weatherData = JSON.parse(body);
@@ -60,18 +67,33 @@ module.exports = {
         const temperatureF = weatherData.currently.temperature.toFixed(0);
         const temperatureC = fahrenheitToCelcius(temperatureF);
         const summary = weatherData.currently.summary;
-        const humidity = weatherData.currently.humidity * 100;
+        const humidity = (weatherData.currently.humidity * 100).toFixed(0);
         // convert speed to freedom units
         const windSpeed = (weatherData.currently.windSpeed * 1.61).toFixed(0);
         const pressure = weatherData.currently.pressure.toFixed(0);
         const embed = new discord.RichEmbed();
-        embed.setColor('#4286f4')
-             .setFooter(`Local Time: ${dateString}`)
-             .setTitle(`Weather in ${address}`)
-             .addField('Summary', summary)
-             .addField('Temperature', `${temperatureC} °C / ${temperatureF} °F`, true)
-             .addField('Humidity', `${humidity}%`, true)
-             .setDescription(weatherConfig.icons[weatherData.currently.icon]);
+
+        if (verbose) {
+          embed.setColor('#4286f4')
+            .setFooter(`Local Time: ${dateString}`)
+            .setTitle(`Weather in ${address}`)
+            .addField('Summary', summary)
+            .addField('Temperature °C', `${temperatureC} °C`, true)
+            .addField('Temperature °F', `${temperatureF} °F`, true)
+            .addField('Timezone', weatherData.timezone, true)
+            .addField('Humidity', `${humidity}%`, true)
+            .addField('Wind Speed', `${windSpeed} km/h`, true)
+            .addField('Air Pressure', `${pressure} mbar`, true)
+            .setDescription(weatherConfig.icons[weatherData.currently.icon]);
+        } else {
+          embed.setColor('#4286f4')
+            .setFooter(`Local Time: ${dateString}`)
+            .setTitle(`Weather in ${address}`)
+            .addField('Summary', summary)
+            .addField('Temperature', `${temperatureC} °C / ${temperatureF} °F`, true)
+            .addField('Humidity', `${humidity}%`, true)
+            .setDescription(weatherConfig.icons[weatherData.currently.icon]);
+        }
 
         message.channel.sendEmbed(embed);
       });
