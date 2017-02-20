@@ -69,12 +69,8 @@ module.exports = {
              .setFooter(`Local Time: ${dateString}`)
              .setTitle(`Weather in ${address}`)
              .addField('Summary', summary)
-             .addField('Temperature °C', `${temperatureC} °C`, true)
-             .addField('Temperature °F', `${temperatureF} °F`, true)
-             .addField('Timezone', weatherData.timezone, true)
+             .addField('Temperature', `${temperatureC} °C / ${temperatureF} °F`, true)
              .addField('Humidity', `${humidity}%`, true)
-             .addField('Wind Speed', `${windSpeed} km/h`, true)
-             .addField('Air Pressure', `${pressure} mbar`, true)
              .setDescription(weatherConfig.icons[weatherData.currently.icon]);
 
         message.channel.sendEmbed(embed);
