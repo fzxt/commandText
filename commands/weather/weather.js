@@ -63,7 +63,7 @@ module.exports = {
         const localTime = new Date(utcTime * 1000);
         localTime.setHours(localTime.getHours() + offset);
         // toGMTString prints out timezone of host so we slice it off
-        const dateString = localTime.toGMTString().slice(0, -4);
+        const dateString = localTime.toUTCString().slice(0, -4);
         const temperatureF = weatherData.currently.temperature.toFixed(0);
         const temperatureC = fahrenheitToCelcius(temperatureF);
         const summary = weatherData.currently.summary;
