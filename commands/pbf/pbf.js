@@ -29,7 +29,6 @@ module.exports = {
         try {
           pbfBody('.result__a').each((i, link) => {
             const href = link.attribs.href;
-            console.log(href);
             if (href.search(/^https?:\/\/(www\.)?pbfcomics\.com\/\d+\//) !== -1 && pbfLink === false) {
               pbfLink = href;
             }
@@ -47,8 +46,8 @@ module.exports = {
               // we have successfully got a response
               const htmlBody = cheerio.load(body);
 
-              if (htmlBody('#toptd').children().get(0).tagName === 'img') {
-                const img = htmlBody('#toptd').children().first();
+              if (htmlBody('#topimg')) {
+                const img = htmlBody('#topimg');
                 message.channel.sendMessage('```diff\n' +
                   `Title: ${img.attr('alt')}\n` +
                   '```\n' +
