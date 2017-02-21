@@ -9,10 +9,6 @@
     "timeLimit": 60,
     "limitMessages": false
   },
-  "pbf": {
-    "timeLimit": 60,
-    "limitMessages": false
-  },
   "weather": {
     "icons": {
       "clear-day": ":sunny:",
