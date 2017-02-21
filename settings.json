@@ -9,6 +9,10 @@
     "timeLimit": 60,
     "limitMessages": false
   },
+  "pbf": {
+    "timeLimit": 60,
+    "limitMessages": false
+  },
   "weather": {
     "icons": {
       "clear-day": ":sunny:",
@@ -32,7 +36,8 @@
     "vote",
     "xkcd",
     "weather",
-    "server"
+    "server",
+    "pbf"
   ],
   "openshift": {
     "heartbeat_channel": "keepalive",
