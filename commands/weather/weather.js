@@ -62,8 +62,13 @@ module.exports = {
         // datetime is weird in javascript, please do change this part if you can
         const localTime = new Date(utcTime * 1000);
         localTime.setHours(localTime.getHours() + offset);
+        let dateString;
         // toGMTString prints out timezone of host so we slice it off
-        const dateString = localTime.toUTCString() + ' ' + offset;
+        if (offset > 0) {
+          dateString = localTime.toUTCString() + ' +' + offset;
+        } else {
+          dateString = localTime.toUTCString() + ' ' + offset;
+        }
         const temperatureF = weatherData.currently.temperature.toFixed(0);
         const temperatureC = fahrenheitToCelcius(temperatureF);
         const summary = weatherData.currently.summary;
