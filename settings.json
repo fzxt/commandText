@@ -36,7 +36,8 @@
     "xkcd",
     "weather",
     "server",
-    "pbf"
+    "pbf",
+    "stats"
   ],
   "openshift": {
     "heartbeat_channel": "keepalive",

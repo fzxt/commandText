@@ -121,7 +121,6 @@ class TheAwesomeBot {
 
     this.client.channels.forEach(function add(item) {
       if (item.type === 'text') {
-        console.log(item.name);
         if (item.name in this.hourlyMsgCount) {
           this.db.run('INSERT INTO ChannelStats(NAME,MSGS_PER_HOUR) values(?,?);',
             item.name, this.hourlyMsgCount[item.name]);
