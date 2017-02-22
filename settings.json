@@ -1,7 +1,7 @@
 {
   "bot_cmd": "!bot",
-  "statistics": {
-    "timeIntervalSec": 30
+  "stats": {
+    "timeIntervalSec": 10
   },
   "voting": {
     "immuneRoles": ["Admins", "Mods"],
@@ -38,6 +38,9 @@
     "server",
     "pbf",
     "stats"
+  ],
+  "tasks": [
+    "statsHandler"
   ],
   "openshift": {
     "heartbeat_channel": "keepalive",

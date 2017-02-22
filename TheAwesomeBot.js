@@ -1,7 +1,6 @@
 /* eslint-disable class-methods-use-this */
 const path = require('path');
 const Discord = require('discord.js');
-const sqlite3 = require('sqlite3');
 
 const Settings = require(path.join(__dirname, 'settings.json')); // eslint-disable-line import/no-dynamic-require
 let Tokens;
@@ -19,9 +18,8 @@ class TheAwesomeBot {
     this.settings = Settings;
     this.settings.tokens = Tokens; // insert tokens into our settings obj
     this.commands = {};
-    this.hourlyMsgCount = {}; // Need to accumulate hourly message count before dumping to database
+    this.tasks = {};
     this.usageList = '';
-    this.db = new sqlite3.Database('statistics.db');
 
     // store the RE as they're expensive to create
     this.cmd_re = new RegExp(`^${this.settings.bot_cmd}\\s+([^\\s]+)\\s*([^]*)\\s*`, 'i');
@@ -30,20 +28,24 @@ class TheAwesomeBot {
     this.isReady = false;
   }
 
+  getTextChannelCount() {
+    // Might be a better way to do this in javascript
+    let count = 0;
+
+    this.client.channels.forEach( function(item) {
+      if (item.type === 'text') {
+        count += 1;
+      }
+    });
+
+    return count;
+  }
+
   onMessage() {
     return (message) => {
       // don't respond to own messages
       if (this.client.user.username === message.author.username) {
         return;
-      }
-
-      if (message.channel.type === 'text') {
-        console.log(message.channel.name);
-        if (message.channel.name in this.hourlyMsgCount) {
-          this.hourlyMsgCount[message.channel.name] += 1;
-        } else {
-          this.hourlyMsgCount[message.channel.name] = 1;
-        }
       }
 
       // check if message is a command
@@ -92,8 +94,10 @@ class TheAwesomeBot {
       Object.keys(this.commands).filter(cmd =>
         typeof this.commands[cmd].init === 'function')
       .forEach(cmd => this.commands[cmd].init(this));
+      Object.keys(this.tasks).filter(task =>
+        typeof this.tasks[task].init === 'function')
+      .forEach(task => this.tasks[task].init(this));
       this.isReady = true;
-      setInterval(this.updateDatabase.bind(this), this.settings.statistics.timeIntervalSec * 1000);
     });
   }
 
@@ -113,21 +117,12 @@ class TheAwesomeBot {
     });
   }
 
-  updateDatabase() {
-    // TODO only update if the counts have changed from last time
-    // Grab the total number of users
-    const totalUsers = this.client.users.size;
-    this.db.run('INSERT INTO Members(COUNT) values(?);', totalUsers);
-
-    this.client.channels.forEach(function add(item) {
-      if (item.type === 'text') {
-        if (item.name in this.hourlyMsgCount) {
-          this.db.run('INSERT INTO ChannelStats(NAME,MSGS_PER_HOUR) values(?,?);',
-            item.name, this.hourlyMsgCount[item.name]);
-          this.hourlyMsgCount[item.name] = 0;
-        }
-      }
-    }, this);
+  loadTasks(taskList) {
+    taskList.forEach((task) => {
+      const fullpath = path.join(__dirname, 'tasks', task, `${task}.js`);
+      const script = require(fullpath); // eslint-disable-line global-require, import/no-dynamic-require
+      this.commands[task] = script;
+    });
   }
 
   loadCommands(cmdList) {
@@ -151,27 +146,13 @@ class TheAwesomeBot {
     });
   }
 
-  initDatabase() {
-    this.db.run('CREATE TABLE IF NOT EXISTS ChannelStats(' +
-      'ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,' +
-      'NAME            TEXT  NOT NULL,' +
-      'DATE            TIMESTAMP   default (strftime(\'%s\', \'now\')),' +
-      'MSGS_PER_HOUR   INTEGER   NOT NULL);');
-
-    this.db.run('CREATE TABLE IF NOT EXISTS Members(' +
-      'ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,' +
-      'DATE            TIMESTAMP   default (strftime(\'%s\', \'now\')),' +
-      'COUNT           INTEGER   NOT NULL);');
-  }
-
   init() {
     // load commands
     console.log('Loading commands...');
     this.loadCommands(this.settings.commands);
 
-
-    // load statistics database
-    this.initDatabase();
+    console.log('Loading tasks...');
+    this.loadTasks(this.settings.tasks);
 
     // setup events
     console.log('Setting up event bindings...');

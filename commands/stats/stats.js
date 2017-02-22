@@ -1,5 +1,7 @@
 let db;
 let client;
+const sqlite3 = require('sqlite3');
+
 
 module.exports = {
   usage: [
@@ -8,18 +10,22 @@ module.exports = {
   ],
   run: (bot, message, cmdArgs) => {
     console.log("Hello world");
-
-    var msgBody='';
-    var msgSums={}
+    const numChannels = bot.getTextChannelCount();
+    let channelCount = 0;
+    var msgBody='```Messages per hour\n-----------\n';
 
     client.channels.forEach(function add(item) {
       if (item.type === 'text') {
         var sum = 0;
         console.log("Selecting for ", item.name );
-        db.all('SELECT MSGS_PER_HOUR FROM ChannelStats WHERE NAME=?',item.name, function(err, rows) {
-          rows.forEach(function(item) {
-            console.log(item.MSGS_PER_HOUR);
-          });
+        db.all('SELECT AVG_MSGS_PER_HOUR FROM DailyChannelStats WHERE NAME=? order by DATE DESC LIMIT 1',item.name, function(err, rows) {
+          console.log(rows);
+          channelCount += 1;
+          msgBody += item.name + ':' + rows[0].AVG_MSGS_PER_HOUR + '\n';
+
+          if( channelCount === numChannels ) {
+            message.channel.sendMessage(msgBody + '```');
+          }
           });
       }
 
@@ -29,7 +35,7 @@ module.exports = {
     return false;
   },
   init: (bot) => {
-    db = bot.db;
+    db = new sqlite3.Database('statistics.db');
     client = bot.client;
   },
 };
