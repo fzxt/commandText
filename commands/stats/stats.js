@@ -1,6 +1,7 @@
 let db;
 let client;
 const sqlite3 = require('sqlite3');
+const discord = require('discord.js');
 
 function getStats(channelName, message) {
   db.all('SELECT AvgMsgsPerHour FROM DailyChannelStats WHERE NAME=? order by Date DESC LIMIT 1', channelName,
@@ -33,17 +34,26 @@ function getStatsAllChannels(numChannels, message) {
 }
 
 function getUserStats(message) {
-  // let msgBody = '```';
+  let msgBody = '```';
 
-  // db.all('SELECT Count,Date FROM Members ORDER BY Date DESC', item.name,
-  //   (err, rows) => {
-  //     channelCount += 1;
-  //     msgBody += item.name + ':' + rows[0].AvgMsgsPerHour + '\n';
-
-  //     if (channelCount === numChannels) {
-  //       message.channel.sendMessage(msgBody + '```');
-  //     }
-  //   });
+  db.all('SELECT AVG(MembersOnline), MIN(MembersOnline), MAX(MembersOnline) from Members',
+    (err, rows) => {
+      if (rows.length > 0) {
+        msgBody += 'Average: ' + rows[0]['AVG(MembersOnline)'] + '\n';
+        const embed = new discord.RichEmbed();
+        embed.setTitle('Statistics')
+          .setColor('#ff7260')
+          .setAuthor(message.guild.name, message.guild.iconURL)
+          .setDescription(message.guild.owner.user.username)
+          .addField('Members', message.guild.members.size, true)
+          .addField('Members Online', message.guild.members.filter((user) => user.presence.status === 'online').size)
+          .addField('Avg Members Online', rows[0]['AVG(MembersOnline)'])
+          .addField('Min Members Online', rows[0]['MIN(MembersOnline)'])
+          .addField('Max Members Online', rows[0]['MAX(MembersOnline)'])
+          .addField('Created', message.guild.createdAt.toString(), true);
+        message.channel.sendEmbed(embed);
+      }
+    });
 
 }
 

@@ -9,6 +9,7 @@ module.exports = {
             .setAuthor(message.guild.name, message.guild.iconURL)
             .setDescription(message.guild.owner.user.username)
             .addField('Members', message.guild.members.size, true)
+            .addField('Members Online', message.guild.members.filter((user) => user.presence.status === 'online').size)
             .addField('Created', message.guild.createdAt.toString(), true)
             .addField('Emojis',
             message.guild.emojis.size > 0 ? message.guild.emojis.map(d => d.toString()).join(' ') : 'None');
