@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 const path = require('path');
 const Discord = require('discord.js');
-const sqlite3 = require('sqlite3')
+const sqlite3 = require('sqlite3');
 
 const Settings = require(path.join(__dirname, 'settings.json')); // eslint-disable-line import/no-dynamic-require
 let Tokens;
@@ -37,11 +37,11 @@ class TheAwesomeBot {
         return;
       }
 
-      if(message.channel.type==='text'){
+      if (message.channel.type === 'text') {
         console.log(message.channel.name);
-        if(message.channel.name in this.hourlyMsgCount){
-          this.hourlyMsgCount[message.channel.name]++;
-        }else{
+        if (message.channel.name in this.hourlyMsgCount) {
+          this.hourlyMsgCount[message.channel.name] += 1;
+        } else {
           this.hourlyMsgCount[message.channel.name] = 1;
         }
       }
@@ -93,7 +93,7 @@ class TheAwesomeBot {
         typeof this.commands[cmd].init === 'function')
       .forEach(cmd => this.commands[cmd].init(this));
       this.isReady = true;
-      setInterval(this.updateDatabase.bind(this), 30000);
+      setInterval(this.updateDatabase.bind(this), 1000);
     });
   }
 
@@ -116,19 +116,19 @@ class TheAwesomeBot {
   updateDatabase() {
     // TODO only update if the counts have changed from last time
     // Grab the total number of users
-    let totalUsers = this.client.users.size;
+    const totalUsers = this.client.users.size;
     this.db.run('INSERT INTO Members(COUNT) values(?);', totalUsers);
-    
-    // Grab stats for each channel
-    //console.log(this.client.channels);
-    for(var k of this.client.channels.values()){
-      if(k.type == 'text'){
-        if(k.name in this.hourlyMsgCount){
-          this.db.run('INSERT INTO ChannelStats(NAME,MSGS_PER_HOUR) values(?,?);',k.name,this.hourlyMsgCount[k.name]);
-          this.hourlyMsgCount[k.name] = 0;
+
+    this.client.channels.forEach(function add(item) {
+      if (item.type === 'text') {
+        console.log(item.name);
+        if (item.name in this.hourlyMsgCount) {
+          this.db.run('INSERT INTO ChannelStats(NAME,MSGS_PER_HOUR) values(?,?);',
+            item.name, this.hourlyMsgCount[item.name]);
+          this.hourlyMsgCount[item.name] = 0;
         }
       }
-    }
+    }, this);
   }
 
   loadCommands(cmdList) {
@@ -152,19 +152,17 @@ class TheAwesomeBot {
     });
   }
 
-  initDatabase(){
-    this.db.run('CREATE TABLE IF NOT EXISTS ChannelStats(\
-      ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,\
-      NAME            TEXT  NOT NULL,\
-      DATE            TIMESTAMP   default (strftime(\'%s\', \'now\')),\
-      MSGS_PER_HOUR   INTEGER   NOT NULL\
-      );');
+  initDatabase() {
+    this.db.run('CREATE TABLE IF NOT EXISTS ChannelStats(' +
+      'ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,' +
+      'NAME            TEXT  NOT NULL,' +
+      'DATE            TIMESTAMP   default (strftime(\'%s\', \'now\')),' +
+      'MSGS_PER_HOUR   INTEGER   NOT NULL);');
 
-    this.db.run('CREATE TABLE IF NOT EXISTS Members(\
-      ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,\
-      DATE            TIMESTAMP   default (strftime(\'%s\', \'now\')),\
-      COUNT           INTEGER   NOT NULL\
-      );');
+    this.db.run('CREATE TABLE IF NOT EXISTS Members(' +
+      'ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,' +
+      'DATE            TIMESTAMP   default (strftime(\'%s\', \'now\')),' +
+      'COUNT           INTEGER   NOT NULL);');
   }
 
   init() {
