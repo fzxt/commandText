@@ -39,15 +39,7 @@ function initDatabase() {
 }
 
 function getMembersOnline() {
-  // Gotta be a better way to do this...
-  let onlineCount = 0;
-  Object.keys(client.users.array()).forEach((value) => {
-    if (client.users.array()[value].presence.status === 'online') {
-      onlineCount += 1;
-    }
-  });
-
-  return onlineCount;
+  return client.users.filter((user) => user.presence.status === 'online').size;
 }
 
 function publishDailyAverage(stats) {
