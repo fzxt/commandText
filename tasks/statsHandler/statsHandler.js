@@ -23,19 +23,18 @@ function initDatabase() {
     'ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,' +
     'Name            TEXT  NOT NULL,' +
     'Date            TIMESTAMP   default (datetime(\'now\')),' +
-    'MembersOnline            TIMESTAMP   default (datetime(\'now\')),' +
     'MsgsPerHour   INTEGER   NOT NULL);');
 
   db.run('CREATE TABLE IF NOT EXISTS Members(' +
     'ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,' +
     'Date            TIMESTAMP   default (datetime(\'now\')),' +
+    'MembersOnline            TIMESTAMP   default (datetime(\'now\')),' +
     'Count           INTEGER   NOT NULL);');
 
   db.run('CREATE TABLE IF NOT EXISTS DailyChannelStats(' +
     'ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,' +
     'Name            TEXT  NOT NULL,' +
     'Date            TIMESTAMP   default (datetime(\'now\')),' +
-    'MembersOnline            TIMESTAMP   default (datetime(\'now\')),' +
     'AvgMsgsPerHour           INTEGER   NOT NULL);');
 }
 
@@ -58,7 +57,6 @@ function publishDailyAverage(stats) {
   });
   // Clear out the old data to save space, it's essentially daily temporary storage
   db.run('DELETE FROM ChannelStats');
-  db.run('INSERT INTO Members(Count) VALUES(?);', client.users.size);
 }
 
 function calculateDailyAverage() {
@@ -101,12 +99,14 @@ function updateDatabase() {
   client.channels.forEach((item) => {
     if (item.type === 'text') {
       if (item.name in hourlyMsgCount) {
-        db.run('INSERT INTO ChannelStats(Name,MsgsPerHour,MembersOnline) VALUES(?,?,?);',
-        [item.name, hourlyMsgCount[item.name], getMembersOnline()]);
+        db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
+        [item.name, hourlyMsgCount[item.name]]);
         hourlyMsgCount[item.name] = 0;
       }
     }
   }, this);
+
+  db.run('INSERT INTO Members(MembersOnline,Count) VALUES(?,?);', getMembersOnline(), client.users.size);
 }
 
 module.exports = {

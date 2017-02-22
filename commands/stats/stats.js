@@ -5,11 +5,11 @@ const sqlite3 = require('sqlite3');
 function getStats(channelName, message) {
   db.all('SELECT AvgMsgsPerHour FROM DailyChannelStats WHERE NAME=? order by Date DESC LIMIT 1', channelName,
   (err, rows) => {
-    if (rows !== undefined) {
+    if (rows.length > 0) {
       const msgBody = '```Messages per hour\n-----------\n' + channelName + ': ' + rows[0].AvgMsgsPerHour + '```';
       message.channel.sendMessage(msgBody);
     } else {
-      message.channel.sendMessage('Could not find channel: ' + channelName);
+      message.channel.sendMessage('`Could not find channel: ' + channelName + '`');
     }
   });
 }
