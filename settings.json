@@ -1,5 +1,8 @@
 {
   "bot_cmd": "!bot",
+  "statistics": {
+    "timeIntervalSec": 30
+  },
   "voting": {
     "immuneRoles": ["Admins", "Mods"],
     "voteThreshold": 5,

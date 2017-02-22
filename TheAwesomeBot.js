@@ -93,7 +93,7 @@ class TheAwesomeBot {
         typeof this.commands[cmd].init === 'function')
       .forEach(cmd => this.commands[cmd].init(this));
       this.isReady = true;
-      setInterval(this.updateDatabase.bind(this), 1000);
+      setInterval(this.updateDatabase.bind(this), this.settings.statistics.timeIntervalSec * 1000);
     });
   }
 
@@ -169,6 +169,7 @@ class TheAwesomeBot {
     // load commands
     console.log('Loading commands...');
     this.loadCommands(this.settings.commands);
+
 
     // load statistics database
     this.initDatabase();
