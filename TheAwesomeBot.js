@@ -32,7 +32,7 @@ class TheAwesomeBot {
     // Might be a better way to do this in javascript
     let count = 0;
 
-    this.client.channels.forEach( function(item) {
+    this.client.channels.forEach((item) => {
       if (item.type === 'text') {
         count += 1;
       }

@@ -3,12 +3,11 @@ const sqlite3 = require('sqlite3');
 let db;
 let config;
 let client;
-let hourlyMsgCount = {};
+const hourlyMsgCount = {};
 let myBot;
 
 function handleMessage() {
   return (message) => {
-    console.log("got msg in stats");
     if (message.channel.type === 'text') {
       console.log(message.channel.name);
       if (message.channel.name in hourlyMsgCount) {
@@ -41,49 +40,44 @@ function initDatabase() {
 
 function publishDailyAverage(stats) {
   console.log(stats);
-  for (channel in stats) {
+  Object.keys(stats).forEach((channel) => {
     db.run('INSERT INTO DailyChannelStats(NAME,AVG_MSGS_PER_HOUR) values(?,?);',
     [channel, stats[channel]]);
-  }
-
+  });
   // Clear out the old data to save space, it's essentially daily temporary storage
   db.run('DELETE FROM ChannelStats');
 }
 
 function calculateDailyAverage() {
-  let dailyStats={};
-  console.log("Updating averages");
+  const dailyStats = {};
   const numChannels = myBot.getTextChannelCount();
   let channelCount = 0;
 
   // Go through each channel and figure out the average messages per hour
-  client.channels.forEach(function add(item) {
+  client.channels.forEach((item) => {
     if (item.type === 'text') {
-      dailyStats[item.name] = {'sum': 0, 'count': 0};
-      console.log("Selecting for ", item.name );
+      dailyStats[item.name] = { sum: 0, count: 0 };
 
       // TODO nick the date between is redundant if we are clearing out the table anyway
-      db.all('SELECT MSGS_PER_HOUR FROM ChannelStats WHERE NAME=? AND DATE BETWEEN strftime(\'%s\', \'now\', \'-1 day\') AND strftime(\'%s\', \'now\')',item.name, function(err, rows) {
+      db.all('SELECT MSGS_PER_HOUR FROM ChannelStats WHERE NAME=?', item.name, (err, rows) => {
         channelCount += 1;
-        console.log('Got results for: ' + item.name + ' count: ' + channelCount);
 
-        rows.forEach( function(row) {
-          dailyStats[item.name]["sum"] += row.MSGS_PER_HOUR;
-          dailyStats[item.name]["count"] += 1;
+        rows.forEach((row) => {
+          dailyStats[item.name].sum += row.MSGS_PER_HOUR;
+          dailyStats[item.name].count += 1;
         });
 
-        if(channelCount === numChannels) {
-          console.log("Done");
-          let dailyAverage = {};
+        if (channelCount === numChannels) {
+          const dailyAverage = {};
 
-          for( channel in dailyStats )
-          {
-            if( dailyStats[channel]["count"] != 0 ) {
-              dailyAverage[channel] = parseInt(dailyStats[channel]["sum"] / dailyStats[channel]["count"]);
+          Object.keys(dailyStats).forEach((channel) => {
+            if (dailyStats[channel].count !== 0) {
+              dailyAverage[channel] = parseInt(dailyStats[channel].sum / dailyStats[channel].count, 10);
             } else {
               dailyAverage[channel] = 0;
             }
-          }
+          });
+
           publishDailyAverage(dailyAverage);
         }
       });
@@ -94,11 +88,10 @@ function calculateDailyAverage() {
 function updateDatabase() {
   // TODO only update if the counts have changed from last time
   // Grab the total number of users
-  console.log("updating db");
   const totalUsers = client.users.size;
   db.run('INSERT INTO Members(COUNT) values(?);', totalUsers);
 
-  client.channels.forEach(function add(item) {
+  client.channels.forEach((item) => {
     if (item.type === 'text') {
       if (item.name in hourlyMsgCount) {
         db.run('INSERT INTO ChannelStats(NAME,MSGS_PER_HOUR) values(?,?);',
