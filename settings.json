@@ -1,7 +1,21 @@
 {
   "bot_cmd": "!stabbybot",
   "stats": {
-    "timeIntervalSec": 3600
+    "timeIntervalSec": 3600,
+    "channelFilter": [
+      "welcome",
+      "mods",
+      "admins",
+      "shitlist",
+      "jukedevtesting",
+      "petreon",
+      "information",
+      "announements",
+      "help-directory",
+      "request channel",
+      "testing channel",
+      "hackathon"
+    ]
   },
   "voting": {
     "immuneRoles": ["Admins", "Mods"],

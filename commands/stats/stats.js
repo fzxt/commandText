@@ -1,7 +1,9 @@
-let db;
-let client;
 const sqlite3 = require('sqlite3');
 const discord = require('discord.js');
+
+let db;
+let client;
+let config;
 
 function getStats(channelName, message, backUnit) {
   db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
@@ -27,13 +29,24 @@ function getStats(channelName, message, backUnit) {
   });
 }
 
-function getChannelRanks(numChannels, message, backUnit, limit) {
-  const channelData = {};
-  let channelCount = 0;
-
+function sendChannelRanks(message, channelData) {
   const embed = new discord.RichEmbed();
   embed.setColor('#ff7260')
     .setAuthor(message.guild.name, message.guild.iconURL);
+
+  let fieldData = '';
+
+  channelData.forEach((channel) => {
+    fieldData += channel[0] + ' (Avg ' + channel[1] + '/hr)\n';
+  });
+
+  embed.addField('Channel Ranking', fieldData);
+  message.channel.sendEmbed(embed);
+}
+
+function getChannelRanks(numChannels, message, backUnit, limit) {
+  const channelData = {};
+  let channelCount = 0;
 
   client.channels.forEach((item) => {
     if (item.type === 'text') {
@@ -54,20 +67,24 @@ function getChannelRanks(numChannels, message, backUnit, limit) {
               list.push([channel, channelData[channel]]);
             });
 
+            // Filter out the channels in the filter list
+            list = list.filter(channel => config.channelFilter.indexOf(channel[0]) === -1);
+
             list.sort((a, b) => b[1] - a[1]);
 
-            if (limit > 0) {
+            if (limit === 0) {
+              // Do in chunks of 25
+              const chunk = 25;
+              let i;
+              let j;
+              for (i = 0, j = list.length; i < j; i += chunk) {
+                const temparray = list.slice(i, i + chunk);
+                sendChannelRanks(message, temparray);
+              }
+            } else {
               list = list.slice(0, limit);
+              sendChannelRanks(message, list);
             }
-
-            let fieldData = '';
-
-            list.forEach((channel) => {
-              fieldData += channel[0] + ' (Avg ' + channel[1] + ')\n';
-            });
-
-            embed.addField('Channel Ranking', fieldData);
-            message.channel.sendEmbed(embed);
           }
         });
     }
@@ -75,7 +92,7 @@ function getChannelRanks(numChannels, message, backUnit, limit) {
 }
 
 function getUserStats(message, backUnit) {
-  db.all('SELECT AVG(MembersOnline), MIN(MembersOnline), MAX(MembersOnline) from Members where Date' +
+  db.all('SELECT AVG(MembersOnline), MIN(MembersOnline), MAX(MembersOnline) from Members where Date ' +
     'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');',
     (err, rows) => {
       if (rows.length > 0) {
@@ -97,8 +114,10 @@ function getUserStats(message, backUnit) {
 module.exports = {
   usage: [
     'Get server statistics',
-    'stats <channel> <hourly/daily/weekly/monthly>- list statistics for specific channel. Parameter is optional. Defaults to daily.',
-    'stats rank <hourly/daily/weekly/monthly> <all> - ranking of all channels by activity. Two parameters are optional. Defaults to daily.',
+    'stats <channel> <hourly/daily/weekly/monthly>- list statistics for specific channel.' +
+    ' Parameter is optional. Defaults to daily.',
+    'stats rank <hourly/daily/weekly/monthly> <all> - ranking of all channels by activity.' +
+    ' Two parameters are optional. Defaults to daily.',
     'stats users <hourly/daily/weekly/monthly> - list stats on total users. Parameter is optional. Defaults to daily.',
   ],
   run: (bot, message, cmdArgs) => {
@@ -107,7 +126,7 @@ module.exports = {
     }
     const splitArgs = cmdArgs.split(' ');
     const baseCmd = splitArgs[0];
-    var backUnit = '-1 day'
+    let backUnit = '-1 day';
 
     if (splitArgs.indexOf('hourly') >= 0) {
       backUnit = '-1 hour';
@@ -117,23 +136,17 @@ module.exports = {
       backUnit = '-1 month';
     }
 
-    if (splitArgs.length > 1) {
-      flag = splitArgs[1];
-    }
-
     if (cmdArgs.length > 0) {
       if (baseCmd === 'users') {
         getUserStats(message, backUnit);
       } else if (baseCmd === 'rank') {
-        var backUnit = '-1 day';
-        var limit = 5;
+        let limit = 5;
 
         if (splitArgs.indexOf('all') >= 0) {
           limit = 0;
         }
 
         getChannelRanks(bot.getTextChannelCount(), message, backUnit, limit);
-
       } else {
         getStats(cmdArgs.split(' ')[0], message, backUnit);
       }
@@ -143,6 +156,7 @@ module.exports = {
     return false;
   },
   init: (bot) => {
+    config = bot.settings.stats;
     db = new sqlite3.Database('statistics.db');
     client = bot.client;
   },
