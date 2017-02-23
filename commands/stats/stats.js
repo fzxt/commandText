@@ -3,9 +3,9 @@ let client;
 const sqlite3 = require('sqlite3');
 const discord = require('discord.js');
 
-function getStats(channelName, message) {
+function getStats(channelName, message, backUnit) {
   db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
-    'BETWEEN datetime(\'now\',\'-1 day\') AND datetime(\'now\');', channelName,
+    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelName,
   (err, rows) => {
     const embed = new discord.RichEmbed();
     embed.setTitle('Statistics For Channel ' + channelName)
@@ -27,7 +27,7 @@ function getStats(channelName, message) {
   });
 }
 
-function getChannelRanks(numChannels, message) {
+function getChannelRanks(numChannels, message, backUnit, limit) {
   const channelData = {};
   let channelCount = 0;
 
@@ -38,7 +38,7 @@ function getChannelRanks(numChannels, message) {
   client.channels.forEach((item) => {
     if (item.type === 'text') {
       db.all('SELECT AVG(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
-        'BETWEEN datetime(\'now\',\'-1 day\') AND datetime(\'now\');', item.name,
+        'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', item.name,
         (err, rows) => {
           channelData[item.name] = 0;
           if (rows.length === 1) {
@@ -49,17 +49,21 @@ function getChannelRanks(numChannels, message) {
           channelCount += 1;
 
           if (channelCount === numChannels) {
-            const list = [];
+            let list = [];
             Object.keys(channelData).forEach((channel) => {
               list.push([channel, channelData[channel]]);
             });
 
             list.sort((a, b) => b[1] - a[1]);
 
+            if (limit > 0) {
+              list = list.slice(0, limit);
+            }
+
             let fieldData = '';
 
             list.forEach((channel) => {
-              fieldData += channel[0] + '\n';
+              fieldData += channel[0] + ' (Avg ' + channel[1] + ')\n';
             });
 
             embed.addField('Channel Ranking', fieldData);
@@ -70,70 +74,9 @@ function getChannelRanks(numChannels, message) {
   });
 }
 
-function getStatsAllChannels(numChannels, message, backUnit) {
-  const channelData = {};
-  let channelCount = 0;
-
-  client.channels.forEach((item) => {
-    if (item.type === 'text') {
-      const embed = new discord.RichEmbed();
-      embed.setTitle('Statistics for ' + item.name)
-        .setColor('#ff7260')
-        .setAuthor(message.guild.name, message.guild.iconURL);
-      db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats ' +
-        'WHERE NAME = ? and Date BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', item.name,
-        (err, rows) => {
-          channelData[item.name] = { min: 'N/A', max: 'N/A', avg: 'N/A', embed: null };
-          if (rows.length === 1) {
-            if (rows[0]['AVG(MsgsPerHour)'] != null) {
-              channelData[item.name].avg = rows[0]['AVG(MsgsPerHour)'].toFixed(2);
-            }
-
-            if (rows[0]['MIN(MsgsPerHour)'] != null) {
-              channelData[item.name].min = rows[0]['MIN(MsgsPerHour)'];
-            }
-
-            if (rows[0]['MAX(MsgsPerHour)'] != null) {
-              channelData[item.name].max = rows[0]['MAX(MsgsPerHour)'];
-            }
-          }
-
-          embed.addField('Average Messages Per Hour', channelData[item.name].avg)
-            .addField('Minimum Messages Per Hour', channelData[item.name].min)
-            .addField('Maximum Messages Per Hour', channelData[item.name].max);
-
-          channelData[item.name].embed = embed;
-          channelCount += 1;
-
-          if (channelCount === numChannels) {
-            const list = [];
-            Object.keys(channelData).forEach((channel) => {
-              list.push(channelData[channel]);
-            });
-
-            list.sort((a, b) => {
-              if (a.avg === 'N/A') {
-                return 1;
-              }
-
-              if (b.avg === 'N/A') {
-                return -1;
-              }
-
-              return b.avg - a.avg;
-            });
-
-            list.forEach((channel) => {
-              message.channel.sendEmbed(channel.embed);
-            });
-          }
-        });
-    }
-  });
-}
-
-function getUserStats(message) {
-  db.all('SELECT AVG(MembersOnline), MIN(MembersOnline), MAX(MembersOnline) from Members',
+function getUserStats(message, backUnit) {
+  db.all('SELECT AVG(MembersOnline), MIN(MembersOnline), MAX(MembersOnline) from Members where Date' +
+    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');',
     (err, rows) => {
       if (rows.length > 0) {
         const embed = new discord.RichEmbed();
@@ -154,36 +97,48 @@ function getUserStats(message) {
 module.exports = {
   usage: [
     'Get server statistics',
-    'stats <channel> - list statistics for specific channel',
-    'stats rank - ranking of all channels by activity',
-    'stats hourly - list most recent hourly stats',
-    'stats daily - list stats for the past 24 hours',
-    'stats weekly - list stats for the past week',
-    'stats monthly - list stats for the past month',
-    'stats users - list stats on total users',
+    'stats <channel> <hourly/daily/weekly/monthly>- list statistics for specific channel. Parameter is optional. Defaults to daily.',
+    'stats rank <hourly/daily/weekly/monthly> <all> - ranking of all channels by activity. Two parameters are optional. Defaults to daily.',
+    'stats users <hourly/daily/weekly/monthly> - list stats on total users. Parameter is optional. Defaults to daily.',
   ],
   run: (bot, message, cmdArgs) => {
     if (message.member.user.username !== 'superstabby') {
       return true;
     }
+    const splitArgs = cmdArgs.split(' ');
+    const baseCmd = splitArgs[0];
+    var backUnit = '-1 day'
+
+    if (splitArgs.indexOf('hourly') >= 0) {
+      backUnit = '-1 hour';
+    } else if (splitArgs.indexOf('weekly') >= 0) {
+      backUnit = '-7 days';
+    } else if (splitArgs.indexOf('monthly') >= 0) {
+      backUnit = '-1 month';
+    }
+
+    if (splitArgs.length > 1) {
+      flag = splitArgs[1];
+    }
+
     if (cmdArgs.length > 0) {
-      if (cmdArgs === 'users') {
-        getUserStats(message);
-      } else if (cmdArgs === 'rank') {
-        getChannelRanks(bot.getTextChannelCount(), message);
-      } else if (cmdArgs === 'hourly') {
-        getStatsAllChannels(bot.getTextChannelCount(), message, '-1 hour');
-      } else if (cmdArgs === 'weekly') {
-        getStatsAllChannels(bot.getTextChannelCount(), message, '-7 day');
-      } else if (cmdArgs === 'monthly') {
-        getStatsAllChannels(bot.getTextChannelCount(), message, '-1 month');
-      } else if (cmdArgs === 'daily') {
-        getStatsAllChannels(bot.getTextChannelCount(), message, '-1 day');
+      if (baseCmd === 'users') {
+        getUserStats(message, backUnit);
+      } else if (baseCmd === 'rank') {
+        var backUnit = '-1 day';
+        var limit = 5;
+
+        if (splitArgs.indexOf('all') >= 0) {
+          limit = 0;
+        }
+
+        getChannelRanks(bot.getTextChannelCount(), message, backUnit, limit);
+
       } else {
-        getStats(cmdArgs.split(' ')[0], message);
+        getStats(cmdArgs.split(' ')[0], message, backUnit);
       }
     } else {
-      getStatsAllChannels(bot.getTextChannelCount(), message, '-1 day');
+      getChannelRanks(bot.getTextChannelCount(), message, backUnit, 0);
     }
     return false;
   },
