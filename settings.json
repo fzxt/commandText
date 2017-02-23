@@ -1,5 +1,5 @@
 {
-  "bot_cmd": "!superbot",
+  "bot_cmd": "!stabbybot",
   "stats": {
     "timeIntervalSec": 3600
   },
@@ -28,11 +28,7 @@
   },
   "commands": [
     "help",
-    "jseval",
-    "pro",
-    "stream",
     "uptime",
-    "vote",
     "xkcd",
     "weather",
     "server",

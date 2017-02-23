@@ -137,10 +137,9 @@ function getUserStats(message) {
     (err, rows) => {
       if (rows.length > 0) {
         const embed = new discord.RichEmbed();
-        embed.setTitle('Statistics')
+        embed.setTitle('User Statistics')
           .setColor('#ff7260')
           .setAuthor(message.guild.name, message.guild.iconURL)
-          .setDescription(message.guild.owner.user.username)
           .addField('Members', message.guild.members.size, true)
           .addField('Members Online', message.guild.members.filter(user => user.presence.status === 'online').size)
           .addField('Avg Members Online', parseInt(rows[0]['AVG(MembersOnline)'], 10))

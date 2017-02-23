@@ -39,11 +39,12 @@ function getMembersOnline() {
 function updateDatabase() {
   client.channels.forEach((item) => {
     if (item.type === 'text') {
-      if (item.name in hourlyMsgCount) {
-        db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
-        [item.name, hourlyMsgCount[item.name]]);
+      if (!(item.name in hourlyMsgCount)) {
         hourlyMsgCount[item.name] = 0;
       }
+      db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
+      [item.name, hourlyMsgCount[item.name]]);
+      hourlyMsgCount[item.name] = 0;
     }
   }, this);
 
@@ -55,6 +56,7 @@ module.exports = {
     client = bot.client;
     config = bot.settings.stats;
     db = new sqlite3.Database('statistics.db');
+
     client.on('message', handleMessage());
     initDatabase();
     setInterval(updateDatabase, config.timeIntervalSec * 1000);
