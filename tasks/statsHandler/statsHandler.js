@@ -7,27 +7,29 @@ const hourlyMsgCount = {};
 
 function handleMessage() {
   return (message) => {
-    if (message.channel.type === 'text') {
-      if (message.channel.name in hourlyMsgCount) {
-        hourlyMsgCount[message.channel.name] += 1;
-      } else {
-        hourlyMsgCount[message.channel.name] = 1;
+    if (!message.member.user.bot) {
+      if (message.channel.type === 'text') {
+        if (message.channel.name in hourlyMsgCount) {
+          hourlyMsgCount[message.channel.name] += 1;
+        } else {
+          hourlyMsgCount[message.channel.name] = 1;
+        }
       }
+
+      const id = message.member.user.id;
+
+      db.all('SELECT Count,Date FROM TempLeaderboard WHERE Name = ?', id,
+      (err, rows) => {
+        let count = 1;
+        let date = 'now';
+        if (rows.length > 0) {
+          count = rows[0].Count + 1;
+          date = rows[0].Date;
+        }
+
+        db.run('REPLACE INTO TempLeaderboard(Name,Date,Count) VALUES(?,datetime(\'' + date + '\'),?)', [id, count]);
+      });
     }
-
-    const id = message.member.user.id;
-
-    db.all('SELECT Count,Date FROM TempLeaderboard WHERE Name = ?', id,
-    (err, rows) => {
-      let count = 1;
-      let date = 'now';
-      if (rows.length > 0) {
-        count = rows[0].Count + 1;
-        date = rows[0].Date;
-      }
-
-      db.run('REPLACE INTO TempLeaderboard(Name,Date,Count) VALUES(?,datetime(\'' + date + '\'),?)', [id, count]);
-    });
   };
 }
 
@@ -71,7 +73,7 @@ function getMembersOnline() {
 function updateLeaderboard() {
   // Go through each user in the leaderboard that hasn't had an update in the stats
   db.each('SELECT * from TempLeaderboard where Date NOT BETWEEN ' +
-    'datetime(\'now\',\'-10 minutes\') AND datetime(\'now\')', (err, row) => {
+    'datetime(\'now\',\'-1 day\') AND datetime(\'now\')', (err, row) => {
     if (row !== undefined) {
       // Grab current daily average
       db.all('SELECT AvgMsgs,Count from Leaderboard where Name=?', row.Name, (leaderErr, leaderRow) => {
