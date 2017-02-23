@@ -12,8 +12,7 @@ function getStats(channelName, message, backUnit) {
     const embed = new discord.RichEmbed();
     embed.setTitle('Statistics For Channel ' + channelName)
       .setColor('#ff7260')
-      .setAuthor(message.guild.name, message.guild.iconURL)
-      .setDescription(message.guild.owner.user.username);
+      .setAuthor(message.guild.name, message.guild.iconURL);
 
     if (rows.length === 1) {
       embed.addField('Average Messages Per Hour', rows[0]['AVG(MsgsPerHour)'].toFixed(2))
@@ -111,6 +110,33 @@ function getUserStats(message, backUnit) {
     });
 }
 
+function getLeaderboard(message) {
+  const embed = new discord.RichEmbed();
+  embed.setColor('#ff7260');
+  db.all('SELECT Name, AvgMsgs from Leaderboard WHERE AvgMsgs!=0 order by AvgMsgs desc limit 20', (err, rows) => {
+    if (rows !== undefined && rows.length > 0) {
+      let msgField = '';
+      let count = 1;
+      rows.forEach((row) => {
+        console.log(row);
+        client.fetchUser(row.Name).then((username) => {
+          console.log(username.username);
+          msgField += count + '. ' + username + ' (' + row.AvgMsgs + ')\n';
+
+          if (count === rows.length) {
+            embed.addField('Leaderboard', msgField);
+            message.channel.sendEmbed(embed);
+          }
+          count += 1;
+        });
+      });
+    } else {
+      embed.addField('Leaderboard', 'Uninitialized. Give me some time!');
+      message.channel.sendEmbed(embed);
+    }
+  });
+}
+
 module.exports = {
   usage: [
     'Get server statistics',
@@ -119,11 +145,9 @@ module.exports = {
     'stats rank <hourly/daily/weekly/monthly> <all> - ranking of all channels by activity.' +
     ' Two parameters are optional. Defaults to daily.',
     'stats users <hourly/daily/weekly/monthly> - list stats on total users. Parameter is optional. Defaults to daily.',
+    'stats leaderboard - list most active users',
   ],
   run: (bot, message, cmdArgs) => {
-    if (message.member.user.username !== 'superstabby') {
-      return true;
-    }
     const splitArgs = cmdArgs.split(' ');
     const baseCmd = splitArgs[0];
     let backUnit = '-1 day';
@@ -147,6 +171,8 @@ module.exports = {
         }
 
         getChannelRanks(bot.getTextChannelCount(), message, backUnit, limit);
+      } else if (baseCmd === 'leaderboard') {
+        getLeaderboard(message);
       } else {
         getStats(cmdArgs.split(' ')[0], message, backUnit);
       }
