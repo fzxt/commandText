@@ -26,7 +26,53 @@ function getStats(channelName, message) {
   });
 }
 
-function getStatsAllChannels(numChannels, message) {
+function getChannelRanks(numChannels, message) {
+  let channelData = {};
+  let channelCount = 0;
+
+  const embed = new discord.RichEmbed();
+    embed.setColor('#ff7260')
+      .setAuthor(message.guild.name, message.guild.iconURL);
+
+  client.channels.forEach((item) => {
+    if (item.type === 'text') {
+    
+      db.all('SELECT AVG(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date BETWEEN datetime(\'now\',\'-1 day\') AND datetime(\'now\');', item.name,
+        (err, rows) => {
+          channelData[item.name] = 0;
+          if (rows.length == 1) {
+              if( rows[0]['AVG(MsgsPerHour)'] != null ) {
+                channelData[item.name] = rows[0]['AVG(MsgsPerHour)'].toFixed(2);
+              }
+          }
+     
+          channelCount += 1;
+
+          if (channelCount === numChannels) {
+            let list = [];
+            Object.keys(channelData).forEach((channel) => {
+              list.push([channel,channelData[channel]]);
+            });
+
+            list.sort((a,b) => {
+              return b[1] - a[1];
+            });
+
+            fieldData = '';
+
+            list.forEach((channel) => {
+               fieldData += channel[0] + '\n';
+            });
+
+            embed.addField('Channel Ranking', fieldData);
+            message.channel.sendEmbed(embed);
+          }
+        });
+    }
+  });
+}
+
+function getStatsAllChannels(numChannels, message, backUnit) {
   let channelData = {};
   let channelCount = 0;
 
@@ -36,9 +82,9 @@ function getStatsAllChannels(numChannels, message) {
       embed.setTitle('Statistics for ' + item.name)
         .setColor('#ff7260')
         .setAuthor(message.guild.name, message.guild.iconURL);
-      db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date BETWEEN datetime(\'now\',\'-1 day\') AND datetime(\'now\');', item.name,
+      db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', item.name,
         (err, rows) => {
-          channelData[item.name] = { min: 'N/A', max: 'N/A', avg: 'N/A' };
+          channelData[item.name] = { min: 'N/A', max: 'N/A', avg: 'N/A', embed: null };
           if (rows.length == 1) {
               if( rows[0]['AVG(MsgsPerHour)'] != null ) {
                 channelData[item.name].avg = rows[0]['AVG(MsgsPerHour)'].toFixed(2);
@@ -56,13 +102,32 @@ function getStatsAllChannels(numChannels, message) {
           embed.addField('Average Messages Per Hour', channelData[item.name].avg)
             .addField('Minimum Messages Per Hour', channelData[item.name].min)
             .addField('Maximum Messages Per Hour', channelData[item.name].max);
-          message.channel.sendEmbed(embed);
+          
+          channelData[item.name].embed = embed;
           channelCount += 1;
 
-          // if (channelCount === numChannels) {
-          //   console.log('sending embed');
-          //   //message.channel.sendEmbed(embed);
-          // }
+          if (channelCount === numChannels) {
+            let list = [];
+            Object.keys(channelData).forEach((channel) => {
+              list.push(channelData[channel]);
+            });
+
+            list.sort((a,b) => {
+              if (a.avg === 'N/A') {
+                return 1;
+              }
+
+              if( b.avg === 'N/A') {
+                return -1;
+              }
+
+              return b.avg - a.avg;
+            });
+
+            list.forEach((channel) => {
+               message.channel.sendEmbed(channel.embed);
+            });
+          }
         });
     }
   });
@@ -94,6 +159,7 @@ module.exports = {
   usage: [
     'Get server statistics',
     'stats <channel> - list statistics for specific channel',
+    'stats rank - ranking of all channels by activity',
     'stats hourly - list most recent hourly stats',
     'stats daily - list stats for the past 24 hours',
     'stats weekly - list stats for the past week',
@@ -101,14 +167,27 @@ module.exports = {
     'stats users - list stats on total users',
   ],
   run: (bot, message, cmdArgs) => {
+    if (message.member.user.username !== 'superstabby'){
+      return true;
+    }
     if (cmdArgs.length > 0) {
       if (cmdArgs === 'users') {
         getUserStats(message);
+      } else if (cmdArgs === 'rank') {
+        getChannelRanks(bot.getTextChannelCount(), message);
+      } else if (cmdArgs == 'hourly') {
+        getStatsAllChannels(bot.getTextChannelCount(), message, '-1 hour');
+      } else if (cmdArgs == 'weekly') {
+        getStatsAllChannels(bot.getTextChannelCount(), message, '-7 day');
+      } else if (cmdArgs == 'monthly') {
+        getStatsAllChannels(bot.getTextChannelCount(), message, '-1 month');
+      } else if (cmdArgs == 'daily') {
+        getStatsAllChannels(bot.getTextChannelCount(), message, '-1 day');
       } else {
         getStats(cmdArgs.split(' ')[0], message);
       }
     } else {
-      getStatsAllChannels(bot.getTextChannelCount(), message);
+      getStatsAllChannels(bot.getTextChannelCount(), message, '-1 day');
     }
     return false;
   },
