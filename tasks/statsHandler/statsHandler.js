@@ -4,7 +4,6 @@ let db;
 let config;
 let client;
 const hourlyMsgCount = {};
-let myBot;
 
 function handleMessage() {
   return (message) => {
@@ -33,7 +32,7 @@ function initDatabase() {
 }
 
 function getMembersOnline() {
-  return client.users.filter((user) => user.presence.status === 'online').size;
+  return client.users.filter(user => user.presence.status === 'online').size;
 }
 
 
@@ -53,7 +52,6 @@ function updateDatabase() {
 
 module.exports = {
   init: (bot) => {
-    myBot = bot;
     client = bot.client;
     config = bot.settings.stats;
     db = new sqlite3.Database('statistics.db');

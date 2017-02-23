@@ -1,7 +1,7 @@
 {
   "bot_cmd": "!superbot",
   "stats": {
-    "timeIntervalSec": 10
+    "timeIntervalSec": 3600
   },
   "voting": {
     "immuneRoles": ["Admins", "Mods"],
