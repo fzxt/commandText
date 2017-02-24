@@ -66,8 +66,6 @@ function getStats(channelName, message, backUnit) {
         channelGraph.y.push(row.MsgsPerHour);
       }
     }, (err) => {
-      console.log("Graph for channel: " + channelName);
-      console.log(channelGraph);
       sendGraph(message.channel, channelGraph);
     });
 }
@@ -163,7 +161,6 @@ function getUserStats(message, backUnit) {
     'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');',
     (err, row) => {
       if (row !== undefined) {
-        console.log(row);
         usersGraph.x.push(row.Date);
         usersGraph.y.push(row.MembersOnline);
       }
@@ -181,7 +178,6 @@ function getLeaderboard(message) {
       let count = 1;
       rows.forEach((row) => {
         client.fetchUser(row.Name).then((username) => {
-          console.log(username.username);
           msgField += count + '. ' + username + ' (' + row.AvgMsgs + ')\n';
 
           if (count === rows.length) {
