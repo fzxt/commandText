@@ -95,7 +95,7 @@ function getChannelRanks(numChannels, message, backUnit, limit) {
         'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', item.name,
         (err, rows) => {
           channelData[item.name] = 0;
-          if (rows.length === 1) {
+          if ( rows !== undefined && rows.length === 1) {
             if (rows[0]['AVG(MsgsPerHour)'] != null) {
               channelData[item.name] = rows[0]['AVG(MsgsPerHour)'].toFixed(2);
             }
