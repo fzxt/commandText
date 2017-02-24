@@ -54,7 +54,7 @@ function getStats(channelName, message, backUnit) {
   const channelGraph = {
     x: [],
     y: [],
-    type: 'histogram',
+    type: 'scatter',
   };
 
   db.each('SELECT Date, MsgsPerHour FROM ChannelStats WHERE NAME = ? AND Date ' +
