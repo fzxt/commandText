@@ -1,9 +1,33 @@
 const sqlite3 = require('sqlite3');
 const discord = require('discord.js');
+const toArray = require('stream-to-array');
+const util = require('util');
 
+let plotly;
 let db;
 let client;
 let config;
+
+function sendGraph(channel, graphData) {
+  const figure = { data: [graphData] };
+  const imgOpts = {
+    format: 'png',
+    width: 1000,
+    height: 500,
+  };
+
+  plotly.getImage(figure, imgOpts, (error, imageStream) => {
+    if (error) return console.log(error);
+
+    toArray(imageStream).then((parts) => {
+      const buffers = parts.map(part => (util.isBuffer(part) ? part : Buffer.from(part)));
+      channel.sendFile(Buffer.concat(buffers));
+    });
+
+    // Not sure why lint is making me do this
+    return imageStream;
+  });
+}
 
 function getStats(channelName, message, backUnit) {
   db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
@@ -26,6 +50,23 @@ function getStats(channelName, message, backUnit) {
 
     message.channel.sendEmbed(embed);
   });
+
+  const channelGraph = {
+    x: [],
+    y: [],
+    type: 'scatter',
+  };
+
+  db.each('SELECT Date, MsgsPerHour from ChannelStats where Date ' +
+    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');',
+    (err, row) => {
+      if (row !== undefined) {
+        channelGraph.x.push(row.Date);
+        channelGraph.y.push(row.MsgsPerHour);
+      }
+    }, (err) => {
+      sendGraph(message.channel, channelGraph);
+    });
 }
 
 function sendChannelRanks(message, channelData) {
@@ -108,6 +149,24 @@ function getUserStats(message, backUnit) {
         message.channel.sendEmbed(embed);
       }
     });
+
+  const usersGraph = {
+    x: [],
+    y: [],
+    type: 'scatter',
+  };
+
+  db.each('SELECT Date, MembersOnline from Members where Date ' +
+    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');',
+    (err, row) => {
+      if (row !== undefined) {
+        console.log(row);
+        usersGraph.x.push(row.Date);
+        usersGraph.y.push(row.MembersOnline);
+      }
+    }, (err) => {
+      sendGraph(message.channel, usersGraph);
+    });
 }
 
 function getLeaderboard(message) {
@@ -118,7 +177,6 @@ function getLeaderboard(message) {
       let msgField = '';
       let count = 1;
       rows.forEach((row) => {
-        console.log(row);
         client.fetchUser(row.Name).then((username) => {
           console.log(username.username);
           msgField += count + '. ' + username + ' (' + row.AvgMsgs + ')\n';
@@ -185,5 +243,8 @@ module.exports = {
     config = bot.settings.stats;
     db = new sqlite3.Database('statistics.db');
     client = bot.client;
+
+    // eslint-disable-next-line global-require
+    plotly = require('plotly')(bot.settings.tokens.plotly_username, bot.settings.tokens.plotly_token);
   },
 };

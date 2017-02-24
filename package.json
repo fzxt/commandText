@@ -22,7 +22,9 @@
     "cheerio": "^0.22.0",
     "discord.js": "^11.0.0",
     "request": "^2.79.0",
-    "sqlite3": "^3.1.8"
+    "sqlite3": "^3.1.8",
+    "plotly": "^1.0.6",
+    "stream-to-array": "^2.3.0"
   },
   "devDependencies": {
     "eslint": "^3.0.1",
