@@ -48,6 +48,10 @@ class TheAwesomeBot {
         return;
       }
 
+      if (message.isMentioned(this.client.user.id)) {
+        message.channel.sendMessage('Please leave me alone.');
+      }
+
       // check if message is a command
       const cmdMatch = message.cleanContent.match(this.cmd_re);
 
