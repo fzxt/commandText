@@ -67,7 +67,7 @@ function updateUserAverage(userId, currentAvg, currentCount, newMsgs) {
 }
 
 function getMembersOnline() {
-  return client.users.filter(user => user.presence.status === 'online').size;
+  return client.users.filter(user => user.presence.status !== 'offline').size;
 }
 
 function updateLeaderboard() {
