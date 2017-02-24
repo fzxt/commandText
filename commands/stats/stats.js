@@ -57,8 +57,8 @@ function getStats(channelName, message, backUnit) {
     type: 'histogram',
   };
 
-  db.each('SELECT Date, MsgsPerHour from ChannelStats where Date ' +
-    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');',
+  db.each('SELECT Date, MsgsPerHour FROM ChannelStats WHERE NAME = ? AND Date ' +
+    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelName,
     (err, row) => {
       if (row !== undefined) {
         channelGraph.x.push(row.Date);
