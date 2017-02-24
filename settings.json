@@ -1,7 +1,7 @@
 {
   "bot_cmd": "!stabbybot",
   "stats": {
-    "timeIntervalSec": 10,
+    "timeIntervalSec": 3600,
     "channelFilter": [
       "welcome",
       "mods",
