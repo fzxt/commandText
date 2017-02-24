@@ -65,6 +65,8 @@ function getStats(channelName, message, backUnit) {
         channelGraph.y.push(row.MsgsPerHour);
       }
     }, (err) => {
+      console.log("Graph for channel: " + channelName);
+      console.log(channelGraph);
       sendGraph(message.channel, channelGraph);
     });
 }
