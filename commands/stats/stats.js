@@ -38,7 +38,8 @@ function getStats(channelName, message, backUnit) {
       .setColor('#ff7260')
       .setAuthor(message.guild.name, message.guild.iconURL);
 
-    if (rows.length === 1) {
+    // The module isn't returning an empty array like it should if you enter a Name not in the list
+    if (rows.length ===1 && rows[0]['AVG(MsgsPerHour)'] !== null) {
       embed.addField('Average Messages Per Hour', rows[0]['AVG(MsgsPerHour)'].toFixed(2))
       .addField('Minimum Messages Per Hour', rows[0]['MIN(MsgsPerHour)'])
       .addField('Maximum Messages Per Hour', rows[0]['MAX(MsgsPerHour)']);
