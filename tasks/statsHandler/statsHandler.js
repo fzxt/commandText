@@ -132,6 +132,7 @@ module.exports = {
     client = bot.client;
     config = bot.settings.stats;
     db = new sqlite3.Database('statistics.db');
+    db.configure('busyTimeout', 2000); // 2 second busy timeout
 
     client.on('message', handleMessage());
     initDatabase();

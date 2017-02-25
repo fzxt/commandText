@@ -241,7 +241,7 @@ module.exports = {
   init: (bot) => {
     config = bot.settings.stats;
     db = new sqlite3.Database('statistics.db', sqlite3.OPEN_READONLY);
-    db.configure(busyTimeout,2000); // 2 second busy timeout
+    db.configure('busyTimeout', 2000); // 2 second busy timeout
     //db.serialize();
     client = bot.client;
 
