@@ -14,6 +14,13 @@ function handleMessage() {
         } else {
           hourlyMsgCount[message.channel.name] = 1;
         }
+
+        // Count overall messages per server as well
+        if('overall' in hourlyMsgCount) {
+          hourlyMsgCount['overall'] += 1;
+        } else {
+          hourlyMsgCount['overall'] = 1;
+        }
       }
 
       const id = message.member.user.id;
