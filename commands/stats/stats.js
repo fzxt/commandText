@@ -30,46 +30,44 @@ function sendGraph(channel, graphData) {
 }
 
 function getStats(channelName, message, backUnit) {
-  db.serialize(() => {
-    db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
-      'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelName,
-    (err, rows) => {
-      const embed = new discord.RichEmbed();
-      embed.setTitle('Statistics For Channel ' + channelName)
-        .setColor('#ff7260')
-        .setAuthor(message.guild.name, message.guild.iconURL);
+  db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
+    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelName,
+  (err, rows) => {
+    const embed = new discord.RichEmbed();
+    embed.setTitle('Statistics For Channel ' + channelName)
+      .setColor('#ff7260')
+      .setAuthor(message.guild.name, message.guild.iconURL);
 
-      // The module isn't returning an empty array like it should if you enter a Name not in the list
-      if (rows.length ===1 && rows[0]['AVG(MsgsPerHour)'] !== null) {
-        embed.addField('Average Messages Per Hour', rows[0]['AVG(MsgsPerHour)'].toFixed(2))
-        .addField('Minimum Messages Per Hour', rows[0]['MIN(MsgsPerHour)'])
-        .addField('Maximum Messages Per Hour', rows[0]['MAX(MsgsPerHour)']);
-      } else {
-        embed.addField('Average Messages Per Hour', 'N/A')
-        .addField('Minimum Messages Per Hour', 'N/A')
-        .addField('Maximum Messages Per Hour', 'N/A');
-      }
+    // The module isn't returning an empty array like it should if you enter a Name not in the list
+    if (rows.length ===1 && rows[0]['AVG(MsgsPerHour)'] !== null) {
+      embed.addField('Average Messages Per Hour', rows[0]['AVG(MsgsPerHour)'].toFixed(2))
+      .addField('Minimum Messages Per Hour', rows[0]['MIN(MsgsPerHour)'])
+      .addField('Maximum Messages Per Hour', rows[0]['MAX(MsgsPerHour)']);
+    } else {
+      embed.addField('Average Messages Per Hour', 'N/A')
+      .addField('Minimum Messages Per Hour', 'N/A')
+      .addField('Maximum Messages Per Hour', 'N/A');
+    }
 
-      message.channel.sendEmbed(embed);
-    });
-
-    const channelGraph = {
-      x: [],
-      y: [],
-      type: 'scatter',
-    };
-
-    db.each('SELECT Date, MsgsPerHour FROM ChannelStats WHERE NAME = ? AND Date ' +
-      'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelName,
-      (err, row) => {
-        if (row !== undefined) {
-          channelGraph.x.push(row.Date);
-          channelGraph.y.push(row.MsgsPerHour);
-        }
-      }, (err) => {
-        sendGraph(message.channel, channelGraph);
-      });
+    message.channel.sendEmbed(embed);
   });
+
+  const channelGraph = {
+    x: [],
+    y: [],
+    type: 'scatter',
+  };
+
+  db.each('SELECT Date, MsgsPerHour FROM ChannelStats WHERE NAME = ? AND Date ' +
+    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelName,
+    (err, row) => {
+      if (row !== undefined) {
+        channelGraph.x.push(row.Date);
+        channelGraph.y.push(row.MsgsPerHour);
+      }
+    }, (err) => {
+      sendGraph(message.channel, channelGraph);
+    });
 }
 
 function sendChannelRanks(message, channelData) {
@@ -243,6 +241,7 @@ module.exports = {
   init: (bot) => {
     config = bot.settings.stats;
     db = new sqlite3.Database('statistics.db');
+    db.serialize();
     client = bot.client;
 
     // eslint-disable-next-line global-require
