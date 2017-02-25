@@ -113,6 +113,17 @@ function updateDatabase() {
     }
   }, this);
 
+  // Update overall server stats
+  // Sort of hacky, but eh
+  if (!('overall' in hourlyMsgCount)) {
+    hourlyMsgCount['overall'] = 0;
+  }
+
+  db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
+    ['overall', hourlyMsgCount['overall']]);
+    hourlyMsgCount['overall'] = 0;
+
+
   db.run('INSERT INTO Members(MembersOnline,Count) VALUES(?,?);', getMembersOnline(), client.users.size);
 }
 
