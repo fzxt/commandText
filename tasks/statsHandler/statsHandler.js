@@ -24,18 +24,7 @@ function handleMessage() {
       }
 
       const id = message.member.user.id;
-
-      db.all('SELECT Count,Date FROM TempLeaderboard WHERE Name = ?', id,
-      (err, rows) => {
-        let count = 1;
-        let date = 'now';
-        if (rows.length > 0) {
-          count = rows[0].Count + 1;
-          date = rows[0].Date;
-        }
-
-        db.run('REPLACE INTO TempLeaderboard(Name,Date,Count) VALUES(?,datetime(\'' + date + '\'),?)', [id, count]);
-      });
+      db.run('INSERT INTO Leaderboard(Name) VALUES(?)', id);
     }
   };
 }
@@ -53,18 +42,10 @@ function initDatabase() {
     'MembersOnline   INTEGER NOT NULL,' +
     'Count           INTEGER   NOT NULL);');
 
-  db.run('CREATE TABLE IF NOT EXISTS TempLeaderboard(' +
-    'ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,' +
-    'Date            TIMESTAMP   default (datetime(\'now\')),' +
-    'Name            TEXT NOT NULL UNIQUE,' +
-    'Count           INTEGER   NOT NULL);');
-
   db.run('CREATE TABLE IF NOT EXISTS Leaderboard(' +
     'ID              INTEGER PRIMARY  KEY AUTOINCREMENT NOT NULL,' +
     'Date            TIMESTAMP   default (datetime(\'now\')),' +
-    'Count            INTEGER NOT NULL,' +
-    'Name            TEXT NOT NULL UNIQUE,' +
-    'AvgMsgs         INTEGER   NOT NULL);');
+    'Name            TEXT NOT NULL);');
 }
 
 function updateUserAverage(userId, currentAvg, currentCount, newMsgs) {
@@ -78,26 +59,8 @@ function getMembersOnline() {
 }
 
 function updateLeaderboard() {
-  // Go through each user in the leaderboard that hasn't had an update in the stats
-  db.each('SELECT * from TempLeaderboard where Date NOT BETWEEN ' +
-    'datetime(\'now\',\'-1 day\') AND datetime(\'now\')', (err, row) => {
-    if (row !== undefined) {
-      // Grab current daily average
-      db.all('SELECT AvgMsgs,Count from Leaderboard where Name=?', row.Name, (leaderErr, leaderRow) => {
-        if (leaderRow !== undefined && leaderRow.length > 0) {
-          console.log('updating user ' + row.Name);
-          console.log(leaderRow);
-          updateUserAverage(row.Name, leaderRow[0].AvgMsgs, leaderRow[0].Count, row.Count);
-        } else {
-          console.log('Inserting new user ' + row.Name);
-          db.run('REPLACE INTO Leaderboard(Name,Count,AvgMsgs) VALUES(?,?,?)', [row.Name, 1, row.Count]);
-        }
-
-        // Zero out member's count
-        db.run('REPLACE INTO TempLeaderboard(Name,Date,Count) VALUES(?,datetime(\'now\'),?)', [row.Name, 0]);
-      });
-    }
-  });
+  // Delete any entries more than a day old
+  db.run('DELETE FROM Leaderboard WHERE Date NOT BETWEEN datetime(\'now\',\'-1 day\') AND datetime(\'now\');')
 }
 
 

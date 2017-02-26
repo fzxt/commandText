@@ -151,12 +151,12 @@ class TheAwesomeBot {
   }
 
   init() {
+    console.log('Loading tasks...');
+    this.loadTasks(this.settings.tasks);
+
     // load commands
     console.log('Loading commands...');
     this.loadCommands(this.settings.commands);
-
-    console.log('Loading tasks...');
-    this.loadTasks(this.settings.tasks);
 
     // setup events
     console.log('Setting up event bindings...');

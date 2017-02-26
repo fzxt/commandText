@@ -170,27 +170,21 @@ function getUserStats(message, backUnit) {
 }
 
 function getLeaderboard(message) {
-  const embed = new discord.RichEmbed();
-  embed.setColor('#ff7260');
-  db.all('SELECT Name, AvgMsgs from Leaderboard WHERE AvgMsgs!=0 order by AvgMsgs desc limit 20', (err, rows) => {
-    if (rows !== undefined && rows.length > 0) {
-      let msgField = '';
-      let count = 1;
-      rows.forEach((row) => {
-        client.fetchUser(row.Name).then((username) => {
-          msgField += count + '. ' + username + ' (' + row.AvgMsgs + ')\n';
-
-          if (count === rows.length) {
-            embed.addField('Leaderboard', msgField);
-            message.channel.sendEmbed(embed);
-          }
-          count += 1;
-        });
+  let averages = {};
+  let msgField = '';
+  let count = 1;
+  db.each('SELECT Name, Count(*) AS NumMessages FROM Leaderboard GROUP BY Name ORDER BY COUNT(*) DESC LIMIT 20', (err,row) => {
+    if (row !== undefined) {
+      client.fetchUser(row.Name).then((username) => {
+        msgField += count + '. ' + username + '(' + row.NumMessages + ')\n';
+        count += 1;
       });
-    } else {
-      embed.addField('Leaderboard', 'Uninitialized. Give me some time!');
-      message.channel.sendEmbed(embed);
     }
+  }, (err, numRows) => {
+      const embed = new discord.RichEmbed();
+      embed.setTitle('Daily Leaderboard')
+      .addField('Leaderboard', msgField);
+      message.channel.sendEmbed(embed);
   });
 }
 
