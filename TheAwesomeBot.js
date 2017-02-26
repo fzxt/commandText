@@ -48,8 +48,12 @@ class TheAwesomeBot {
         return;
       }
 
+      if (message.cleanContent.match('!rules')) {
+        message.channel.sendMessage('Rules? There are no rules. Even if there were, I wouldn\'t follow them, and neither should you.');
+      }
+
       if (message.isMentioned(this.client.user.id)) {
-        message.channel.sendMessage('Please leave me alone.');
+        message.channel.sendMessage('Please leave me alone, ' + message.member.displayName + '.');
       }
 
       // check if message is a command
