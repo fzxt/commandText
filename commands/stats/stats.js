@@ -182,8 +182,7 @@ function getLeaderboard(message) {
     }
   }, (err, numRows) => {
       const embed = new discord.RichEmbed();
-      embed.setTitle('Daily Leaderboard')
-      .addField('Leaderboard', msgField);
+      embed.addField('Leaderboard', msgField);
       message.channel.sendEmbed(embed);
   });
 }
