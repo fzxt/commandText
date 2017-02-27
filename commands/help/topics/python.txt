@@ -1,7 +1,5 @@
 See these links/courses for learning Python:
 
-https://docs.python.org/2/
-
 https://docs.python.org/3/
 
 https://www.udacity.com/course/programming-foundations-with-python--ud036
