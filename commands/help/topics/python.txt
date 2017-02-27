@@ -8,4 +8,4 @@ https://automatetheboringstuff.com/
 
 https://www.udacity.com/course/intro-to-computer-science--cs101
 
-http://greenteapress.com/thinkpython2/html/index.html
+http://greenteapress.com/wp/think-python-2e/
