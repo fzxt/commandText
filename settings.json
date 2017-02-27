@@ -33,6 +33,7 @@
     "xkcd",
     "weather",
     "server",
+    "hseval",
     "pbf"
   ],
   "openshift": {
