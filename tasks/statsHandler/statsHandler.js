@@ -30,29 +30,27 @@ function getDateTime() {
 
 }
 
-function handleMessage() {
-  return (message) => {
-    if (!message.member.user.bot) {
-      if (message.channel.type === 'text') {
-        if (message.channel.name in hourlyMsgCount) {
-          hourlyMsgCount[message.channel.name] += 1;
-        } else {
-          hourlyMsgCount[message.channel.name] = 1;
-        }
-
-        // Count overall messages per server as well
-        if('overall' in hourlyMsgCount) {
-          hourlyMsgCount['overall'] += 1;
-        } else {
-          hourlyMsgCount['overall'] = 1;
-        }
+function handleMessage(message) {
+  if (!message.member.user.bot) {
+    if (message.channel.type === 'text') {
+      if (message.channel.name in hourlyMsgCount) {
+        hourlyMsgCount[message.channel.name] += 1;
+      } else {
+        hourlyMsgCount[message.channel.name] = 1;
       }
 
-      const id = message.member.user.id;
-      console.log(getDateTime() + ' ' + message.member.user.username + ' ' + id);
-//      db.run('INSERT INTO Leaderboard(Name) VALUES(?)', id);
+      // Count overall messages per server as well
+      if('overall' in hourlyMsgCount) {
+        hourlyMsgCount['overall'] += 1;
+      } else {
+        hourlyMsgCount['overall'] = 1;
+      }
     }
-  };
+
+    const id = message.member.user.id;
+    console.log(getDateTime() + ' ' + message.member.user.username + ' ' + id);
+//      db.run('INSERT INTO Leaderboard(Name) VALUES(?)', id);
+  }
 }
 
 function initDatabase() {
@@ -122,10 +120,11 @@ module.exports = {
     config = bot.settings.stats;
     db = new sqlite3.Database('statistics.db');
     db.configure('busyTimeout', 2000); // 2 second busy timeout
-
-    client.on('message', handleMessage());
     initDatabase();
     setInterval(updateDatabase, config.timeIntervalSec * 1000);
     setInterval(updateLeaderboard, 10000); // Every 10 seconds, check if it's time to update the daily leaderboard
+  },
+  handleMessage: (message) => {
+    handleMessage(message);
   },
 };

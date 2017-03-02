@@ -48,6 +48,10 @@ class TheAwesomeBot {
         return;
       }
 
+      if (typeof this.tasks['statsHandler'].handleMessage == 'function') {
+        this.tasks['statsHandler'].handleMessage(message);
+      }
+
       if (message.cleanContent.match('!rules')) {
         message.channel.sendMessage('Rules? There are no rules. Even if there were, I wouldn\'t follow them, and neither should you.');
       }
@@ -130,7 +134,7 @@ class TheAwesomeBot {
     taskList.forEach((task) => {
       const fullpath = path.join(__dirname, 'tasks', task, `${task}.js`);
       const script = require(fullpath); // eslint-disable-line global-require, import/no-dynamic-require
-      this.commands[task] = script;
+      this.tasks[task] = script;
     });
   }
 
