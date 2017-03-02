@@ -176,6 +176,7 @@ function getLeaderboard(message) {
   db.each('SELECT Name, Count(*) AS NumMessages FROM Leaderboard GROUP BY Name ORDER BY COUNT(*) DESC LIMIT 20', (err,row) => {
     if (row !== undefined) {
       client.fetchUser(row.Name).then((username) => {
+	console.log(row.Name + ' ' + row.NumMessages);
         msgField += count + '. ' + username + '(' + row.NumMessages + ')\n';
         count += 1;
       });
