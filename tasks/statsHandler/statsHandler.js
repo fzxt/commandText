@@ -49,7 +49,7 @@ function handleMessage(message) {
 
     const id = message.member.user.id;
     console.log(getDateTime() + ' ' + message.member.user.username + ' ' + id);
-//      db.run('INSERT INTO Leaderboard(Name) VALUES(?)', id);
+    db.run('INSERT INTO Leaderboard(Name) VALUES(?)', id);
   }
 }
 
@@ -120,6 +120,7 @@ module.exports = {
     config = bot.settings.stats;
     db = new sqlite3.Database('statistics.db');
     db.configure('busyTimeout', 2000); // 2 second busy timeout
+    db.serialize();
     initDatabase();
     setInterval(updateDatabase, config.timeIntervalSec * 1000);
     setInterval(updateLeaderboard, 10000); // Every 10 seconds, check if it's time to update the daily leaderboard
