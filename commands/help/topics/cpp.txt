@@ -1,4 +1,4 @@
 See these links/courses for learning C++:
 
-http://www.cplusplus.com/doc/tutorial/
-
+http://stackoverflow.com/a/388282
+https://www.reddit.com/r/learnprogramming/wiki/faq_cpp

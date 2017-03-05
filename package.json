@@ -5,7 +5,7 @@
   "main": "TheAwesomeBot.js",
   "scripts": {
     "start": "node start.js",
-    "test": "node test/*.js | tap-summary --no-progress",
+    "test": "if [ \"$TRAVIS_PULL_REQUEST\" = \"false\" ]; then node test/*.js | tap-summary --no-progress; fi",
     "lint": "eslint"
   },
   "repository": {

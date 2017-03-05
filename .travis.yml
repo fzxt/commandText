@@ -1,7 +1,9 @@
 language: node_js
 sudo: false
 dist: trusty
-
 script:
-  - npm test
-  - npm run lint .
+- npm test
+- npm run lint .
+env:
+  global:
+    secure: SpEGhkGHrgZX5zB8o1926TeQDgO1t9npUm3cmTGGhV1GKpz9mt0WRqmIReOLVSG9j0UxF8RfqCHfVulGMg7C2YfOi7KecOF58IVWnajyh+zdhuf1dOEhb9Bl6YWWSzMJUUTVVNmeAf9AkhpcseKBsZLMlJeeK5eWgBkPqsiPvq1xT/8Y+QQ/pDZvmTPqUOB7OAghLZJGC1UuSy7R6uwk77JlbknSuJdb9lM2z4jIDxRrWjiUoaKUDFCJnER23whxvQOp4kp74YlmRC6oT2gQkez6mNlVvJkKDU7FM3QAanKlMjbx12k4++HpdiPfm8RLXUXVHC5CsD3TvhuCXtbsS2j8gpLI34NSC4AC5u/Xp9RgfSE96I0zY2upURFavZIDsTSCsu6XCvRjS0ltsZbVdVj8/WQxLW1YvfpgMQ5+NREBwLQpB/dil2lpoRyz5rSPYc6ta6nq9bNonpeHU7UaQnXIrKoKPdJOxJ+59sxjTwoNbjiS2uJmRfYSo6BCQrYHdx5p5eA92hBqjicjHEM9Px5+X4piRbCULnczV0HsPFATaCrzfW7YcxDgUIXhmm4lagPhaYo5LPT2PLwZ+pTL2en8h9Gbd31e2AyJfHT6WnTzxfk1PGnQPT2GBfhiDV05by8OaFToYPXIJWu6E4EiQc0HuEp4avSsZLYvvlf4Me4=

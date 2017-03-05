@@ -20,7 +20,7 @@
       "partly-cloudy-night": ":partly_sunny:",
       "fog": ":fog:",
       "cloudy":":cloud:",
-      "wind": "wind_blowing_face"
+      "wind": ":wind_blowing_face:"
     }
   },
   "info":{
@@ -36,6 +36,7 @@
     "xkcd",
     "weather",
     "server",
+    "pbf",
     "info"
   ],
   "openshift": {
