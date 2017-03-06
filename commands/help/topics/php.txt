@@ -1,8 +1,7 @@
 See these links/courses for learning PHP:
 
-http://www.w3schools.com/php/
+<http://www.w3schools.com/php/>
 
-http://php.net/manual/en/tutorial.php
+<http://php.net/manual/en/tutorial.php>
 
-https://www.codecademy.com/learn/php
-
+<https://www.codecademy.com/learn/php>

@@ -1,11 +1,11 @@
 See these links/courses for learning JavaScript:
 
-https://www.codecademy.com/learn/javascript
+<https://www.codecademy.com/learn/javascript>
 
-https://www.udacity.com/course/javascript-basics--ud804
+<https://www.udacity.com/course/javascript-basics--ud804>
 
-https://developer.mozilla.org/en-US/docs/Web/JavaScript
+<https://developer.mozilla.org/en-US/docs/Web/JavaScript>
 
-https://www.youtube.com/watch?v=VJOTcUsD2kA
+<https://www.youtube.com/watch?v=VJOTcUsD2kA>
 
-https://www.youtube.com/watch?v=8aGhZQkoFbQ
+<https://www.youtube.com/watch?v=8aGhZQkoFbQ>

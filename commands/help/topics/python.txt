@@ -1,11 +1,11 @@
 See these links/courses for learning Python:
 
-https://docs.python.org/3/
+<https://docs.python.org/3/>
 
-https://www.udacity.com/course/programming-foundations-with-python--ud036
+<https://www.udacity.com/course/programming-foundations-with-python--ud036>
 
-https://automatetheboringstuff.com/
+<https://automatetheboringstuff.com/>
 
-https://www.udacity.com/course/intro-to-computer-science--cs101
+<https://www.udacity.com/course/intro-to-computer-science--cs101>
 
-http://greenteapress.com/wp/think-python-2e/
+<http://greenteapress.com/wp/think-python-2e/>
