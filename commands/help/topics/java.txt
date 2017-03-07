@@ -1,7 +1,10 @@
 See these links/courses for learning Java:
 
+Documentation for Java 7
 <https://docs.oracle.com/javase/7/docs/api/>
 
+Documentation for Java 8
 <https://docs.oracle.com/javase/8/docs/api/>
 
+Tutorials
 <https://docs.oracle.com/javase/tutorial/>
