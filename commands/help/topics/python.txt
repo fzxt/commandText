@@ -1,11 +1,19 @@
 See these links/courses for learning Python:
 
+Documentation
 <https://docs.python.org/3/>
 
-<https://www.udacity.com/course/programming-foundations-with-python--ud036>
+Free to Read Online: Introduction to Programming for Beginners
+<https://greenteapress.com/wp/think-python-2e/>
 
+Free to Read Online: Language Basics and Task Automation
 <https://automatetheboringstuff.com/>
 
-<https://www.udacity.com/course/intro-to-computer-science--cs101>
+Paid Course Library: In-depth Fundamentals, Flask, Django and more
+<https://teamtreehouse.com/library/topic:python>
 
-<http://greenteapress.com/wp/think-python-2e/>
+Free Course: Programming Fundamentals and OOP (~6 weeks)
+<https://udacity.com/course/programming-foundations-with-python--ud036>
+
+Free Course: Build a Search Engine and a Social Network (~3 months)
+<https://udacity.com/course/intro-to-computer-science--cs101>
