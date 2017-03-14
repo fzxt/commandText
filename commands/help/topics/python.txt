@@ -4,7 +4,7 @@ Documentation
 <https://docs.python.org/3/>
 
 Free to Read Online: Introduction to Programming for Beginners
-<https://greenteapress.com/wp/think-python-2e/>
+<http://greenteapress.com/wp/think-python-2e/>
 
 Free to Read Online: Language Basics and Task Automation
 <https://automatetheboringstuff.com/>
