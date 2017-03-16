@@ -82,7 +82,7 @@ function getStats(channelName, message, backUnit) {
   };
 
   db.each('SELECT Date, MsgsPerHour FROM ChannelStats WHERE NAME = ? AND Date ' +
-    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelName,
+    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelID,
     (err, row) => {
       if (row !== undefined) {
         channelGraph.x.push(row.Date);
@@ -115,7 +115,7 @@ function getChannelRanks(numChannels, message, backUnit, limit) {
   client.channels.forEach((item) => {
     if (item.type === 'text') {
       db.all('SELECT AVG(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
-        'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', item.name,
+        'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', item.id,
         (err, rows) => {
           channelData[item.name] = 0;
           if ( rows !== undefined && rows.length === 1) {
