@@ -33,10 +33,10 @@ function getDateTime() {
 function handleMessage(message) {
   if (!message.member.user.bot) {
     if (message.channel.type === 'text') {
-      if (message.channel.name in hourlyMsgCount) {
-        hourlyMsgCount[message.channel.name] += 1;
+      if (message.channel.id in hourlyMsgCount) {
+        hourlyMsgCount[message.channel.id] += 1;
       } else {
-        hourlyMsgCount[message.channel.name] = 1;
+        hourlyMsgCount[message.channel.id] = 1;
       }
 
       // Count overall messages per server as well
@@ -91,12 +91,12 @@ function updateLeaderboard() {
 function updateDatabase() {
   client.channels.forEach((item) => {
     if (item.type === 'text') {
-      if (!(item.name in hourlyMsgCount)) {
-        hourlyMsgCount[item.name] = 0;
+      if (!(item.id in hourlyMsgCount)) {
+        hourlyMsgCount[item.id] = 0;
       }
       db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
-      [item.name, hourlyMsgCount[item.name]]);
-      hourlyMsgCount[item.name] = 0;
+      [item.id, hourlyMsgCount[item.id]]);
+      hourlyMsgCount[item.id] = 0;
     }
   }, this);
 
