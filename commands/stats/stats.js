@@ -41,8 +41,20 @@ function sendGraph(channel, graphData, graphTitle, xLabel, yLabel) {
 }
 
 function getStats(channelName, message, backUnit) {
+  channelID = 'overall';
+
+  client.channels.forEach((item) => {
+    if (item.type == 'text') {
+      if (item.name === channelName) {
+        channelID = item.id;
+      }
+    }
+  }, this);
+
+  console.log("ID: " + channelID);
+
   db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
-    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelName,
+    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelID,
   (err, rows) => {
     const embed = new discord.RichEmbed();
     embed.setTitle('Statistics For Channel ' + channelName)
