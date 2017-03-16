@@ -8,8 +8,19 @@ let db;
 let client;
 let config;
 
-function sendGraph(channel, graphData) {
-  const figure = { data: [graphData] };
+function sendGraph(channel, graphData, graphTitle, xLabel, yLabel) {
+  const figure = { 
+    data: [graphData], 
+    layout: {
+      title: graphTitle,
+      xaxis: {
+        title: xLabel
+      },
+      yaxis: {
+        title: yLabel
+      }
+    }
+  };
   const imgOpts = {
     format: 'png',
     width: 1000,
@@ -66,7 +77,7 @@ function getStats(channelName, message, backUnit) {
         channelGraph.y.push(row.MsgsPerHour);
       }
     }, (err) => {
-      sendGraph(message.channel, channelGraph);
+      sendGraph(message.channel, channelGraph, 'Stats for channel ' + channelName, 'Time', 'Msgs/Hr');
     });
 }
 
@@ -165,7 +176,7 @@ function getUserStats(message, backUnit) {
         usersGraph.y.push(row.MembersOnline);
       }
     }, (err) => {
-      sendGraph(message.channel, usersGraph);
+      sendGraph(message.channel, usersGraph, 'Users Online', 'Time', 'Users');
     });
 }
 
