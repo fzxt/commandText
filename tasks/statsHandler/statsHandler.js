@@ -48,7 +48,7 @@ function handleMessage(message) {
     }
 
     const id = message.member.user.id;
-    console.log(getDateTime() + ' ' + message.member.user.username + ' ' + id);
+ //   console.log(getDateTime() + ' ' + message.member.user.username + ' ' + id);
     db.run('INSERT INTO Leaderboard(Name) VALUES(?)', id);
   }
 }
