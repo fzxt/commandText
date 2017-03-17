@@ -40,6 +40,18 @@ function sendGraph(channel, graphData, graphTitle, xLabel, yLabel) {
   });
 }
 
+function getChannelNameFromId(channelId) {
+  channelName = 'unknown';
+
+  client.channels.forEach((item) => {
+    if (item.id === channelId) {
+      channelName = item.name;
+    }
+  });
+
+  return channelName;
+}
+
 function getStats(channelName, message, backUnit) {
   channelID = 'overall';
 
@@ -50,8 +62,6 @@ function getStats(channelName, message, backUnit) {
       }
     }
   }, this);
-
-  console.log("ID: " + channelID);
 
   db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
     'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelID,
@@ -101,7 +111,7 @@ function sendChannelRanks(message, channelData) {
   let fieldData = '';
 
   channelData.forEach((channel) => {
-    fieldData += channel[0] + ' (Avg ' + channel[1] + '/hr)\n';
+    fieldData += channel.Name + ' (Avg ' + channel.Avg + '/hr)\n';
   });
 
   embed.addField('Channel Ranking', fieldData);
@@ -109,50 +119,24 @@ function sendChannelRanks(message, channelData) {
 }
 
 function getChannelRanks(numChannels, message, backUnit, limit) {
-  const channelData = {};
+  let channelData = [];
   let channelCount = 0;
 
-  client.channels.forEach((item) => {
-    if (item.type === 'text') {
-      db.all('SELECT AVG(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
-        'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', item.id,
-        (err, rows) => {
-          channelData[item.name] = 0;
-          if ( rows !== undefined && rows.length === 1) {
-            if (rows[0]['AVG(MsgsPerHour)'] != null) {
-              channelData[item.name] = rows[0]['AVG(MsgsPerHour)'].toFixed(2);
-            }
-          }
-          channelCount += 1;
+  let limitStr = ''
+  if (limit != 0) {
+    limitStr = 'LIMIT ' + limit;
+  }
 
-          if (channelCount === numChannels) {
-            let list = [];
-            Object.keys(channelData).forEach((channel) => {
-              list.push([channel, channelData[channel]]);
-            });
-
-            // Filter out the channels in the filter list
-            list = list.filter(channel => config.channelFilter.indexOf(channel[0]) === -1);
-
-            list.sort((a, b) => b[1] - a[1]);
-
-            if (limit === 0) {
-              // Do in chunks of 25
-              const chunk = 25;
-              let i;
-              let j;
-              for (i = 0, j = list.length; i < j; i += chunk) {
-                const temparray = list.slice(i, i + chunk);
-                sendChannelRanks(message, temparray);
-              }
-            } else {
-              list = list.slice(0, limit);
-              sendChannelRanks(message, list);
-            }
-          }
-        });
-    }
-  });
+  db.each('SELECT Name, Avg(MsgsPerHour) AS Avg FROM ChannelStats WHERE Date BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\') ' + 
+    'GROUP BY Name ORDER BY Avg(MsgsPerHour) DESC ' + limitStr + ';', (err,row) => {
+     if (row != undefined) {
+      if (config.channelFilter.indexOf(row.Name) == -1) {
+        channelData.push({Name:getChannelNameFromId(row.Name),Avg:row.Avg});
+      }
+     } 
+    }, (err) => {
+      sendChannelRanks(message, channelData);
+    });
 }
 
 function getUserStats(message, backUnit) {
