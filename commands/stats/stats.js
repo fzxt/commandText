@@ -117,7 +117,7 @@ function sendChannelRanks(message, channelData) {
   let fieldData = '';
 
   channelData.forEach((channel) => {
-    fieldData += channel.Name + ' (Avg ' + channel.Avg + '/hr)\n';
+    fieldData += channel.Name + ' (Avg ' + parseFloat(channel.Avg).toFixed(2) + '/hr)\n';
   });
 
   embed.addField('Channel Ranking', fieldData);
