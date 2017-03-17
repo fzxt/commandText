@@ -82,12 +82,6 @@ function getMembersOnline() {
   return client.users.filter(user => user.presence.status !== 'offline').size;
 }
 
-function updateLeaderboard() {
-  // Delete any entries more than a day old
-  db.run('DELETE FROM Leaderboard WHERE Date NOT BETWEEN datetime(\'now\',\'-1 day\') AND datetime(\'now\');')
-}
-
-
 function updateDatabase() {
   client.channels.forEach((item) => {
     if (item.type === 'text') {
@@ -123,7 +117,6 @@ module.exports = {
     db.serialize();
     initDatabase();
     setInterval(updateDatabase, config.timeIntervalSec * 1000);
-    setInterval(updateLeaderboard, 10000); // Every 10 seconds, check if it's time to update the daily leaderboard
   },
   handleMessage: (message) => {
     handleMessage(message);

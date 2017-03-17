@@ -63,8 +63,14 @@ function getStats(channelName, message, backUnit) {
     }
   }, this);
 
-  db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? and Date ' +
-    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelID,
+  let backQuery = 'AND Date BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\') ';
+
+  if (backUnit === 'forever') {
+    backQuery = '';
+  }
+
+  db.all('SELECT AVG(MsgsPerHour), MIN(MsgsPerHour), MAX(MsgsPerHour) FROM ChannelStats WHERE NAME = ? ' +
+    backQuery + ';', channelID,
   (err, rows) => {
     const embed = new discord.RichEmbed();
     embed.setTitle('Statistics For Channel ' + channelName)
@@ -91,8 +97,8 @@ function getStats(channelName, message, backUnit) {
     type: 'scatter',
   };
 
-  db.each('SELECT Date, MsgsPerHour FROM ChannelStats WHERE NAME = ? AND Date ' +
-    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');', channelID,
+  db.each('SELECT Date, MsgsPerHour FROM ChannelStats WHERE NAME = ? ' +
+    backQuery + ';', channelID,
     (err, row) => {
       if (row !== undefined) {
         channelGraph.x.push(row.Date);
@@ -127,7 +133,13 @@ function getChannelRanks(numChannels, message, backUnit, limit) {
     limitStr = 'LIMIT ' + limit;
   }
 
-  db.each('SELECT Name, Avg(MsgsPerHour) AS Avg FROM ChannelStats WHERE Date BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\') ' + 
+  let backQuery = 'WHERE Date BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\') ';
+
+  if ( backUnit === 'forever') {
+    backQuery = '';
+  }
+
+  db.each('SELECT Name, Avg(MsgsPerHour) AS Avg FROM ChannelStats ' + backQuery +  
     'GROUP BY Name ORDER BY Avg(MsgsPerHour) DESC ' + limitStr + ';', (err,row) => {
      if (row != undefined) {
       if (config.channelFilter.indexOf(row.Name) == -1) {
@@ -140,8 +152,13 @@ function getChannelRanks(numChannels, message, backUnit, limit) {
 }
 
 function getUserStats(message, backUnit) {
-  db.all('SELECT AVG(MembersOnline), MIN(MembersOnline), MAX(MembersOnline) from Members where Date ' +
-    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');',
+  let backQuery = 'WHERE Date BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\') ';
+
+  if ( backUnit === 'forever') {
+    backQuery = '';
+  }
+
+  db.all('SELECT AVG(MembersOnline), MIN(MembersOnline), MAX(MembersOnline) from Members ' + backQuery + ';',
     (err, rows) => {
       if (rows.length > 0) {
         const embed = new discord.RichEmbed();
@@ -164,8 +181,8 @@ function getUserStats(message, backUnit) {
     type: 'scatter',
   };
 
-  db.each('SELECT Date, MembersOnline from Members where Date ' +
-    'BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\');',
+  db.each('SELECT Date, MembersOnline from Members ' +
+    backQuery + ';',
     (err, row) => {
       if (row !== undefined) {
         usersGraph.x.push(row.Date);
@@ -176,14 +193,20 @@ function getUserStats(message, backUnit) {
     });
 }
 
-function getLeaderboard(message) {
+function getLeaderboard(message, backUnit) {
   let averages = {};
   let msgField = '';
   let count = 1;
-  db.each('SELECT Name, Count(*) AS NumMessages FROM Leaderboard GROUP BY Name ORDER BY COUNT(*) DESC LIMIT 20', (err,row) => {
+  let dbQuery = 'SELECT Name, Count(*) AS NumMessages FROM Leaderboard WHERE Date BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\')' + 
+    ' GROUP BY Name ORDER BY COUNT(*) DESC LIMIT 20;';
+
+  if(backUnit === 'forever') {
+    dbQuery = 'SELECT Name, Count(*) AS NumMessages FROM Leaderboard GROUP BY Name ORDER BY COUNT(*) DESC LIMIT 20;';
+  }
+
+  db.each(dbQuery, (err,row) => {
     if (row !== undefined) {
       client.fetchUser(row.Name).then((username) => {
-	console.log(row.Name + ' ' + row.NumMessages);
         msgField += count + '. ' + username + '(' + row.NumMessages + ')\n';
         count += 1;
       });
@@ -198,12 +221,12 @@ function getLeaderboard(message) {
 module.exports = {
   usage: [
     'Get server statistics',
-    'stats <channel> <hourly/daily/weekly/monthly>- list statistics for specific channel.' +
+    'stats <channel> <hourly/daily/weekly/monthly/forever>- list statistics for specific channel.' +
     ' Parameter is optional. Defaults to daily.',
-    'stats rank <hourly/daily/weekly/monthly> <all> - ranking of all channels by activity.' +
+    'stats rank <hourly/daily/weekly/monthly/forever> <all> - ranking of all channels by activity.' +
     ' Two parameters are optional. Defaults to daily.',
-    'stats users <hourly/daily/weekly/monthly> - list stats on total users. Parameter is optional. Defaults to daily.',
-    'stats leaderboard - list most active users',
+    'stats users <hourly/daily/weekly/monthly/forever> - list stats on total users. Parameter is optional. Defaults to daily.',
+    'stats leaderboard <hourly/daily/weekly/monthly/forever>- list most active users',
   ],
   run: (bot, message, cmdArgs) => {
     const splitArgs = cmdArgs.split(' ');
@@ -216,6 +239,8 @@ module.exports = {
       backUnit = '-7 days';
     } else if (splitArgs.indexOf('monthly') >= 0) {
       backUnit = '-1 month';
+    } else if (splitArgs.indexOf('forever') >= 0) {
+      backUnit = 'forever';
     }
 
     if (cmdArgs.length > 0) {
@@ -230,7 +255,7 @@ module.exports = {
 
         getChannelRanks(bot.getTextChannelCount(), message, backUnit, limit);
       } else if (baseCmd === 'leaderboard') {
-        getLeaderboard(message);
+        getLeaderboard(message, backUnit);
       } else {
         getStats(cmdArgs.split(' ')[0], message, backUnit);
       }
