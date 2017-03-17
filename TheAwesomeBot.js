@@ -11,6 +11,10 @@ try {
   Tokens = {};
 }
 
+function randomInt (low, high) {
+    return Math.floor(Math.random() * (high - low) + low);
+}
+
 class TheAwesomeBot {
   constructor(token, discordOpt) {
     this.token = token;
@@ -44,7 +48,7 @@ class TheAwesomeBot {
   onMessage() {
     return (message) => {
       // don't respond to own messages
-      if (this.client.user.username === message.author.username) {
+      if (this.client.user.username === message.author.username || message.author.bot) {
         return;
       }
 
@@ -57,7 +61,16 @@ class TheAwesomeBot {
       }
 
       if (message.isMentioned(this.client.user.id)) {
-        message.channel.sendMessage('Please leave me alone, ' + message.member.displayName + '.');
+        let randNum = randomInt(0,4);
+        if (randNum == 0) {
+          message.channel.sendMessage('Please leave me alone, ' + message.member.displayName + '.');
+        } else if (randNum == 1) {
+          message.channel.sendMessage('Please leave me alone, ' + message.member.displayName + '. You are just the worst person.');
+        } else if (randNum == 2) {
+          message.channel.sendMessage('Picking on a poor bot. Does that make you feel good, ' + message.member.displayName + '? I bet everyone is real impressed.');
+        } else {
+          message.channel.sendMessage('Nobody loves you, ' + message.member.displayName + '.');
+        }
       }
 
       // check if message is a command
