@@ -6,6 +6,9 @@ Tutorials/Documentation
 Free to Read Online: A Modern Introduction to Programming
 <http://eloquentjavascript.net/>
 
+Free to Read Online:Exploring ES6
+<http://exploringjs.com/es6/>
+
 Free Course: Fundamental Programming Concepts
 <https://codecademy.com/learn/javascript>
 
