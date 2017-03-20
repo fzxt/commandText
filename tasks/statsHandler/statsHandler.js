@@ -3,6 +3,7 @@ const sqlite3 = require('sqlite3');
 let db;
 let config;
 let client;
+let lastUpdateTime = Date.now();
 const hourlyMsgCount = {};
 
 function getDateTime() {
@@ -82,30 +83,37 @@ function getMembersOnline() {
   return client.users.filter(user => user.presence.status !== 'offline').size;
 }
 
+// Ok, for some reason the setInterval is going off for me after a few calls if I set the interval to an hour
+// Oddly enough, it doesn't seem to happen if I don't do any database calls
+// I've lost all trust for node.js
 function updateDatabase() {
-  client.channels.forEach((item) => {
-    if (item.type === 'text') {
-      if (!(item.id in hourlyMsgCount)) {
+  if (Date.now() - lastUpdateTime > (config.timeIntervalSec * 1000)) {
+    lastUpdateTime = Date.now();
+    console.log(getDateTime() + ": Updating database!");
+    client.channels.forEach((item) => {
+      if (item.type === 'text') {
+        if (!(item.id in hourlyMsgCount)) {
+          hourlyMsgCount[item.id] = 0;
+        }
+        db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
+        [item.id, hourlyMsgCount[item.id]]);
         hourlyMsgCount[item.id] = 0;
       }
-      db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
-      [item.id, hourlyMsgCount[item.id]]);
-      hourlyMsgCount[item.id] = 0;
+    }, this);
+
+    // Update overall server stats
+    // Sort of hacky, but eh
+    if (!('overall' in hourlyMsgCount)) {
+      hourlyMsgCount['overall'] = 0;
     }
-  }, this);
 
-  // Update overall server stats
-  // Sort of hacky, but eh
-  if (!('overall' in hourlyMsgCount)) {
-    hourlyMsgCount['overall'] = 0;
+    db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
+      ['overall', hourlyMsgCount['overall']]);
+      hourlyMsgCount['overall'] = 0;
+
+
+    db.run('INSERT INTO Members(MembersOnline,Count) VALUES(?,?);', getMembersOnline(), client.users.size);
   }
-
-  db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
-    ['overall', hourlyMsgCount['overall']]);
-    hourlyMsgCount['overall'] = 0;
-
-
-  db.run('INSERT INTO Members(MembersOnline,Count) VALUES(?,?);', getMembersOnline(), client.users.size);
 }
 
 module.exports = {
@@ -116,7 +124,7 @@ module.exports = {
     db.configure('busyTimeout', 2000); // 2 second busy timeout
     db.serialize();
     initDatabase();
-    setInterval(updateDatabase, config.timeIntervalSec * 1000);
+    setInterval(updateDatabase, 1000); // Every second check to see if it's time to update
   },
   handleMessage: (message) => {
     handleMessage(message);
