@@ -1,7 +1,13 @@
 See these links for learning CSS:
 
-https://www.codecademy.com/learn/web
+Tutorials/Documentation (In-depth)
+<https://developer.mozilla.org/en-US/docs/Web/CSS>
 
-http://www.w3schools.com/css/default.asp
+Free Course: Learn the basics of HTML and CSS
+<https://codecademy.com/learn/web>
 
-http://learnlayout.com/
+Tutorials/Documentation (Good for Quick Reference)
+<https://w3schools.com/css/default.asp>
+
+Tutorial: Simple introduction to CSS
+<http://learnlayout.com/>

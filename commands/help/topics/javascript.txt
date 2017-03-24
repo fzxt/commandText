@@ -1,11 +1,31 @@
 See these links/courses for learning JavaScript:
 
-https://www.codecademy.com/learn/javascript
+Tutorials/Documentation
+<https://developer.mozilla.org/en-US/docs/Web/JavaScript>
 
-https://www.udacity.com/course/javascript-basics--ud804
+Free to Read Online: A Modern Introduction to Programming
+<http://eloquentjavascript.net/>
 
-https://developer.mozilla.org/en-US/docs/Web/JavaScript
+Free to Read Online:Exploring ES6
+<http://exploringjs.com/es6/>
 
-https://www.youtube.com/watch?v=VJOTcUsD2kA
+Free Course: Fundamental Programming Concepts
+<https://codecademy.com/learn/javascript>
 
-https://www.youtube.com/watch?v=8aGhZQkoFbQ
+Free Course Library: Learn to Code and Help Nonprofits
+<https://freecodecamp.com/>
+
+Free Course: Basic JavaScript (~3 weeks)
+<https://udacity.com/course/javascript-basics--ud804>
+
+Talk: Four Layers of JavaScript OOP (1:09:02)
+<https://youtu.be/VJOTcUsD2kA>
+
+Talk: How Node.js' Event Loop Works (26:52)
+<https://youtu.be/8aGhZQkoFbQ>
+
+Paid Course Library: In-depth Fundamentals, Node, React, jQuery and more
+<https://teamtreehouse.com/library/topic:javascript>
+
+Free to Read Online Series: You Don't Know JS (Core Mechanisms, Advanced)
+<https://github.com/getify/You-Dont-Know-JS>

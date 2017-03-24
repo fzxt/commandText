@@ -47,6 +47,9 @@
       "wind": ":wind_blowing_face:"
     }
   },
+  "info":{
+    "repo":"samoxive/awesomebot"
+  },
   "commands": [
     "help",
     "uptime",
@@ -54,6 +57,7 @@
     "weather",
     "server",
     "pbf",
+    "info",
     "stats"
   ],
   "tasks": [

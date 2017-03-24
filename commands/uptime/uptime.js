@@ -30,4 +30,5 @@ module.exports = {
     ramUsage =((process.memoryUsage().heapUsed / 1024) / 1024).toFixed(2);
     message.channel.sendMessage('Uptime: ' + uptime + '\nRAM Usage: ' + ramUsage + 'MB\n');
   },
+  getUptime: getUptime, // eslint-disable-line object-shorthand
 };

@@ -1,8 +1,10 @@
 See these links/courses for learning PHP:
 
-http://www.w3schools.com/php/
+PHP 5 Tutorials
+<https://w3schools.com/php/>
 
-http://php.net/manual/en/tutorial.php
+A simple tutorial
+<https://php.net/manual/en/tutorial.php>
 
-https://www.codecademy.com/learn/php
-
+Free Course: Fundamental Programming Concepts
+<https://codecademy.com/learn/php>
