@@ -26,9 +26,7 @@ const getUptime = () => {
 module.exports = {
   usage: 'uptime - prints my uptime',
   run: (bot, message) => {
-    uptime = getUptime();
-    ramUsage =((process.memoryUsage().heapUsed / 1024) / 1024).toFixed(2);
-    message.channel.sendMessage('Uptime: ' + uptime + '\nRAM Usage: ' + ramUsage + 'MB\n');
+    message.channel.sendMessage(`Uptime: ${getUptime()}`);
   },
   getUptime: getUptime, // eslint-disable-line object-shorthand
 };

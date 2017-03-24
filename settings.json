@@ -52,7 +52,11 @@
   },
   "commands": [
     "help",
+    "jseval",
+    "pro",
+    "stream",
     "uptime",
+    "vote",
     "xkcd",
     "weather",
     "server",

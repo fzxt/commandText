@@ -6,51 +6,22 @@ let client;
 let lastUpdateTime = Date.now();
 const hourlyMsgCount = {};
 
-function getDateTime() {
-
-    var date = new Date();
-
-    var hour = date.getHours();
-    hour = (hour < 10 ? "0" : "") + hour;
-
-    var min  = date.getMinutes();
-    min = (min < 10 ? "0" : "") + min;
-
-    var sec  = date.getSeconds();
-    sec = (sec < 10 ? "0" : "") + sec;
-
-    var year = date.getFullYear();
-
-    var month = date.getMonth() + 1;
-    month = (month < 10 ? "0" : "") + month;
-
-    var day  = date.getDate();
-    day = (day < 10 ? "0" : "") + day;
-
-    return year + ":" + month + ":" + day + ":" + hour + ":" + min + ":" + sec;
-
-}
-
 function handleMessage(message) {
-  if (!message.member.user.bot) {
-    if (message.channel.type === 'text') {
-      if (message.channel.id in hourlyMsgCount) {
-        hourlyMsgCount[message.channel.id] += 1;
-      } else {
-        hourlyMsgCount[message.channel.id] = 1;
-      }
-
-      // Count overall messages per server as well
-      if('overall' in hourlyMsgCount) {
-        hourlyMsgCount['overall'] += 1;
-      } else {
-        hourlyMsgCount['overall'] = 1;
-      }
+  if (message.channel.type === 'text') {
+    if (message.channel.id in hourlyMsgCount) {
+      hourlyMsgCount[message.channel.id] += 1;
+    } else {
+      hourlyMsgCount[message.channel.id] = 1;
     }
 
-    const id = message.member.user.id;
- //   console.log(getDateTime() + ' ' + message.member.user.username + ' ' + id);
-    db.run('INSERT INTO Leaderboard(Name) VALUES(?)', id);
+    // Count overall messages per server as well
+    if ('overall' in hourlyMsgCount) {
+      hourlyMsgCount.overall += 1;
+    } else {
+      hourlyMsgCount.overall = 1;
+    }
+
+    db.run('INSERT INTO Leaderboard(Name) VALUES(?)', message.member.user.id);
   }
 }
 
@@ -73,12 +44,6 @@ function initDatabase() {
     'Name            TEXT NOT NULL);');
 }
 
-function updateUserAverage(userId, currentAvg, currentCount, newMsgs) {
-  const newSum = (currentAvg * currentCount) + newMsgs;
-  const newAvg = parseInt(newSum / (currentCount + 1), 10);
-  db.run('REPLACE INTO Leaderboard(Name,Count,AvgMsgs) VALUES(?,?,?)', [userId, currentCount + 1, newAvg]);
-}
-
 function getMembersOnline() {
   return client.users.filter(user => user.presence.status !== 'offline').size;
 }
@@ -89,7 +54,8 @@ function getMembersOnline() {
 function updateDatabase() {
   if (Date.now() - lastUpdateTime > (config.timeIntervalSec * 1000)) {
     lastUpdateTime = Date.now();
-    console.log(getDateTime() + ": Updating database!");
+
+    // Insert hourly message count for each channel into ChannelStats table
     client.channels.forEach((item) => {
       if (item.type === 'text') {
         if (!(item.id in hourlyMsgCount)) {
@@ -104,13 +70,12 @@ function updateDatabase() {
     // Update overall server stats
     // Sort of hacky, but eh
     if (!('overall' in hourlyMsgCount)) {
-      hourlyMsgCount['overall'] = 0;
+      hourlyMsgCount.overall = 0;
     }
 
     db.run('INSERT INTO ChannelStats(Name,MsgsPerHour) VALUES(?,?);',
-      ['overall', hourlyMsgCount['overall']]);
-      hourlyMsgCount['overall'] = 0;
-
+      ['overall', hourlyMsgCount.overall]);
+    hourlyMsgCount.overall = 0;
 
     db.run('INSERT INTO Members(MembersOnline,Count) VALUES(?,?);', getMembersOnline(), client.users.size);
   }

@@ -11,10 +11,6 @@ try {
   Tokens = {};
 }
 
-function randomInt (low, high) {
-    return Math.floor(Math.random() * (high - low) + low);
-}
-
 class TheAwesomeBot {
   constructor(token, discordOpt) {
     this.token = token;
@@ -32,19 +28,6 @@ class TheAwesomeBot {
     this.isReady = false;
   }
 
-  getTextChannelCount() {
-    // Might be a better way to do this in javascript
-    let count = 0;
-
-    this.client.channels.forEach((item) => {
-      if (item.type === 'text') {
-        count += 1;
-      }
-    });
-
-    return count;
-  }
-
   onMessage() {
     return (message) => {
       // don't respond to own messages
@@ -52,25 +35,8 @@ class TheAwesomeBot {
         return;
       }
 
-      if (typeof this.tasks['statsHandler'].handleMessage == 'function') {
-        this.tasks['statsHandler'].handleMessage(message);
-      }
-
-      if (message.cleanContent.match('!rules')) {
-        message.channel.sendMessage('Rules? There are no rules. Even if there were, I wouldn\'t follow them, and neither should you.');
-      }
-
-      if (message.isMentioned(this.client.user.id)) {
-        let randNum = randomInt(0,4);
-        if (randNum == 0) {
-          message.channel.sendMessage('Please leave me alone, ' + message.member.displayName + '.');
-        } else if (randNum == 1) {
-          message.channel.sendMessage('Please leave me alone, ' + message.member.displayName + '. You are just the worst person.');
-        } else if (randNum == 2) {
-          message.channel.sendMessage('Picking on a poor bot. Does that make you feel good, ' + message.member.displayName + '? I bet everyone is real impressed.');
-        } else {
-          message.channel.sendMessage('Nobody loves you, ' + message.member.displayName + '.');
-        }
+      if (typeof this.tasks.statsHandler.handleMessage === 'function') {
+        this.tasks.statsHandler.handleMessage(message);
       }
 
       // check if message is a command
