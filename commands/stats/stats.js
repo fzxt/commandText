@@ -142,9 +142,11 @@ function getChannelRanks(message, backUnit, limit) {
     'GROUP BY Name ORDER BY Avg(MsgsPerHour) DESC ' + limitStr + ';', (err, row) => {
     if (row !== undefined) {
       if (config.channelFilter.indexOf(row.Name) === -1) {
-        channelName = getChannelNameFromId(row.Name);
-        if (channelName !== 'unknown'){
+        const channelName = getChannelNameFromId(row.Name);
+        if (channelName !== 'unknown') {
           channelData.push({ Name: getChannelNameFromId(row.Name), Avg: row.Avg });
+        } else {
+          console.log('Unknown channel ID: ' + row.Name);
         }
       }
     }
