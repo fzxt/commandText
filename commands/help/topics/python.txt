@@ -9,11 +9,8 @@ Free to Read Online: Introduction to Programming for Beginners
 Free to Read Online: Language Basics and Task Automation
 <https://automatetheboringstuff.com/>
 
+Free Course: Introduction to Computing using Python
+<https://www.edx.org/course/introduction-computing-using-python-gtx-cs1301x>
+
 Paid Course Library: In-depth Fundamentals, Flask, Django and more
 <https://teamtreehouse.com/library/topic:python>
-
-Free Course: Programming Fundamentals and OOP (~6 weeks)
-<https://udacity.com/course/programming-foundations-with-python--ud036>
-
-Free Course: Build a Search Engine and a Social Network (~3 months)
-<https://udacity.com/course/intro-to-computer-science--cs101>
