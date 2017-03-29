@@ -53,15 +53,24 @@ function getChannelNameFromId(channelId) {
 }
 
 function getStats(channelName, message, backUnit) {
-  let channelID = 'overall';
+  let channelID = 'unknown';
 
-  client.channels.forEach((item) => {
-    if (item.type === 'text') {
-      if (item.name === channelName) {
-        channelID = item.id;
+  if (channelName === 'overall') {
+    channelID = 'overall';
+  } else {
+    client.channels.forEach((item) => {
+      if (item.type === 'text') {
+        if (item.name === channelName) {
+          channelID = item.id;
+        }
       }
-    }
-  }, this);
+    }, this);
+  }
+
+  if (channelID === 'unknown') {
+    message.channel.sendMessage('I\'ve searched all over, but I cannot find the channel: ' + channelName);
+    return;
+  }
 
   let backQuery = 'AND Date BETWEEN datetime(\'now\',\'' + backUnit + '\') AND datetime(\'now\') ';
 
