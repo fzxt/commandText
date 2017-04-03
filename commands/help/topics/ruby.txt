@@ -6,6 +6,9 @@ Official Ruby Core 2.4.1 Documentation
 Quickstart Guide: Ruby In Twenty Minutes
 <https://www.ruby-lang.org/en/documentation/quickstart/>
 
+Learn to Program with Ruby
+<https://pine.fm/LearnToProgram/>
+
 Free (Language Transition): Ruby From Other Languages
 <https://www.ruby-lang.org/en/documentation/ruby-from-other-languages/>
 
