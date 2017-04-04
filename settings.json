@@ -1,5 +1,5 @@
 {
-  "bot_cmd": "!stabbybot",
+  "bot_cmds": ["!stabbybot","!stats","!stabbystats"],
   "stats": {
     "timeIntervalSec": 3600,
     "channelFilter": [
@@ -24,44 +24,12 @@
       "291996118819274755" 
     ]
   },
-  "voting": {
-    "immuneRoles": ["Admins", "Mods"],
-    "voteThreshold": 5,
-    "timeout_in_minutes": 5
-  },
-  "xkcd": {
-    "timeLimit": 60,
-    "limitMessages": false
-  },
-  "weather": {
-    "icons": {
-      "clear-day": ":sunny:",
-      "clear-night": ":crescent_moon:",
-      "rain": ":cloud_rain:",
-      "snow": ":cloud_snow:",
-      "sleet": ":cloud_snow:",
-      "partly-cloudy-day": ":partly_sunny:",
-      "partly-cloudy-night": ":partly_sunny:",
-      "fog": ":fog:",
-      "cloudy":":cloud:",
-      "wind": ":wind_blowing_face:"
-    }
-  },
   "info":{
-    "repo":"samoxive/awesomebot"
+    "repo":"superstabby/awesomebot"
   },
   "commands": [
     "help",
-    "jseval",
-    "pro",
-    "stream",
     "uptime",
-    "vote",
-    "xkcd",
-    "weather",
-    "server",
-    "pbf",
-    "info",
     "stats"
   ],
   "tasks": [
