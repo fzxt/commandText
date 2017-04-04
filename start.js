@@ -1,4 +1,4 @@
-const Bot = require('./TheAwesomeBot.js');
+const Bot = require('./StabbyStats.js');
 const Tokens = require('./tokens.json');
 
 function start() {

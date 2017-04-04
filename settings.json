@@ -1,4 +1,5 @@
 {
+  "preferred_cmd": "!stats",
   "bot_cmds": ["!stabbybot","!stats","!stabbystats"],
   "stats": {
     "timeIntervalSec": 3600,
@@ -28,12 +29,17 @@
     "repo":"superstabby/awesomebot"
   },
   "commands": [
-    "help",
     "uptime",
     "stats"
   ],
   "tasks": [
     "statsHandler"
+  ],
+  "stats_sub_commands": [
+    "rank",
+    "channel",
+    "users",
+    "leaderboard"
   ],
   "openshift": {
     "heartbeat_channel": "keepalive",

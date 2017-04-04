@@ -232,14 +232,13 @@ function getLeaderboard(message, backUnit) {
 
 module.exports = {
   usage: [
-    'Get server statistics',
-    'stats <channel> <hourly/daily/weekly/monthly/forever>- list statistics for specific channel.' +
+    '<channel> <hourly/daily/weekly/monthly/forever>- list statistics for specific channel.' +
     ' Parameter is optional. Defaults to daily.',
-    'stats rank <hourly/daily/weekly/monthly/forever> <all> - ranking of all channels by activity.' +
+    'rank <hourly/daily/weekly/monthly/forever> <all> - ranking of all channels by activity.' +
     ' Two parameters are optional. Defaults to daily.',
-    'stats users <hourly/daily/weekly/monthly/forever> - list stats on total users. Parameter is ' +
+    'users <hourly/daily/weekly/monthly/forever> - list stats on total users. Parameter is ' +
     'optional. Defaults to daily.',
-    'stats leaderboard <hourly/daily/weekly/monthly/forever>- list most active users',
+    'leaderboard <hourly/daily/weekly/monthly/forever>- list most active users',
   ],
   run: (bot, message, cmdArgs) => {
     const splitArgs = cmdArgs.split(' ');
