@@ -232,7 +232,7 @@ function getLeaderboard(message, backUnit) {
 
 module.exports = {
   usage: [
-    '<channel> <hourly/daily/weekly/monthly/forever>- list statistics for specific channel.' +
+    'channel <channel name> <hourly/daily/weekly/monthly/forever>- list statistics for specific channel.' +
     ' Parameter is optional. Defaults to daily.',
     'rank <hourly/daily/weekly/monthly/forever> <all> - ranking of all channels by activity.' +
     ' Two parameters are optional. Defaults to daily.',
@@ -268,11 +268,9 @@ module.exports = {
         getChannelRanks(message, backUnit, limit);
       } else if (baseCmd === 'leaderboard') {
         getLeaderboard(message, backUnit);
-      } else {
-        getStats(cmdArgs.split(' ')[0], message, backUnit);
+      } else if (baseCmd === 'channel') {
+        getStats(cmdArgs.split(' ')[1], message, backUnit);
       }
-    } else {
-      getChannelRanks(message, backUnit, 0);
     }
     return false;
   },
