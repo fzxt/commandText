@@ -21,6 +21,7 @@ class TheAwesomeBot {
     this.tasks = {};
     this.usageList = '';
 
+    // Build regex string for bot summoning
     let regex_str = ''
     this.settings.bot_cmds.forEach((cmd) => {
     	regex_str += cmd + '|';
@@ -31,7 +32,6 @@ class TheAwesomeBot {
 
     this.cmd_re = new RegExp(`^(${regex_str})\\s+([^\\s]+)\\s*([^]*)\\s*`, 'i');
     this.cmd_noarg_re = new RegExp(`^${regex_str}[\\s]*( .*)?$`, 'i');
-    console.log(this.cmd_re)
 
     // flags if connected and client is ready
     this.isReady = false;
@@ -56,10 +56,8 @@ class TheAwesomeBot {
         this.tasks.statsHandler.handleMessage(message);
       }
 
-      // check if message is a command
+      // check if message is a command (bot has been summoned)
       const cmdMatch = message.cleanContent.match(this.cmd_re);
-
-      console.log('Match: ' + cmdMatch)
 
       // not a known command
       if (!cmdMatch || !this.isKnownCommand(cmdMatch[2])) {
@@ -80,9 +78,6 @@ class TheAwesomeBot {
       	cmd = 'stats';
       	cmdArgs = cmdMatch[2] + ' ' + cmdMatch[3].trim();
       }
-
-      console.log('Cmd: ' + cmd);
-      console.log('CmdArgs: ' + cmdArgs);
 
       let showUsage;
 
