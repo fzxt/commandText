@@ -18,6 +18,7 @@ class TheAwesomeBot {
     this.settings = Settings;
     this.settings.tokens = Tokens; // insert tokens into our settings obj
     this.commands = {};
+    this.tasks = {};
     this.usageList = '';
 
     // store the RE as they're expensive to create
@@ -30,8 +31,12 @@ class TheAwesomeBot {
   onMessage() {
     return (message) => {
       // don't respond to own messages
-      if (this.client.user.username === message.author.username) {
+      if (this.client.user.username === message.author.username || message.author.bot) {
         return;
+      }
+
+      if (typeof this.tasks.statsHandler.handleMessage === 'function') {
+        this.tasks.statsHandler.handleMessage(message);
       }
 
       // check if message is a command
@@ -80,6 +85,9 @@ class TheAwesomeBot {
       Object.keys(this.commands).filter(cmd =>
         typeof this.commands[cmd].init === 'function')
       .forEach(cmd => this.commands[cmd].init(this));
+      Object.keys(this.tasks).filter(task =>
+        typeof this.tasks[task].init === 'function')
+      .forEach(task => this.tasks[task].init(this));
       this.isReady = true;
     });
   }
@@ -97,6 +105,14 @@ class TheAwesomeBot {
     return ((err) => {
       console.error('error: ', err);
       console.error(err.trace);
+    });
+  }
+
+  loadTasks(taskList) {
+    taskList.forEach((task) => {
+      const fullpath = path.join(__dirname, 'tasks', task, `${task}.js`);
+      const script = require(fullpath); // eslint-disable-line global-require, import/no-dynamic-require
+      this.tasks[task] = script;
     });
   }
 
@@ -122,6 +138,9 @@ class TheAwesomeBot {
   }
 
   init() {
+    console.log('Loading tasks...');
+    this.loadTasks(this.settings.tasks);
+
     // load commands
     console.log('Loading commands...');
     this.loadCommands(this.settings.commands);

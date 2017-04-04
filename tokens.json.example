@@ -1,5 +1,7 @@
 {
     "discord": "",
     "google_geocode": "",
-    "darksky": ""
+    "darksky": "",
+    "plotly_username": "",
+    "plotly_token": ""
 }

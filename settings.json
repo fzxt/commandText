@@ -1,43 +1,39 @@
 {
-  "bot_cmd": "!bot",
-  "voting": {
-    "immuneRoles": ["Admins", "Mods"],
-    "voteThreshold": 5,
-    "timeout_in_minutes": 5
-  },
-  "xkcd": {
-    "timeLimit": 60,
-    "limitMessages": false
-  },
-  "weather": {
-    "icons": {
-      "clear-day": ":sunny:",
-      "clear-night": ":crescent_moon:",
-      "rain": ":cloud_rain:",
-      "snow": ":cloud_snow:",
-      "sleet": ":cloud_snow:",
-      "partly-cloudy-day": ":partly_sunny:",
-      "partly-cloudy-night": ":partly_sunny:",
-      "fog": ":fog:",
-      "cloudy":":cloud:",
-      "wind": ":wind_blowing_face:"
-    }
+  "bot_cmds": ["!stabbybot","!stats","!stabbystats"],
+  "stats": {
+    "timeIntervalSec": 3600,
+    "channelFilter": [
+      "overall",
+      "284302743525392384",
+      "238727697189044224", 
+      "244861377984987136", 
+      "238689533112090624", 
+      "238712786090328065", 
+      "238726053831507969", 
+      "238727300932173824", 
+      "238727524803280897", 
+      "238727700510932993", 
+      "238728664231968769", 
+      "238828805274206210", 
+      "244865793416757249", 
+      "265541532319219712", 
+      "268538021861785600", 
+      "280877980002025472", 
+      "287275717639536640", 
+      "291974466966257664", 
+      "291996118819274755" 
+    ]
   },
   "info":{
-    "repo":"samoxive/awesomebot"
+    "repo":"superstabby/awesomebot"
   },
   "commands": [
     "help",
-    "jseval",
-    "pro",
-    "stream",
     "uptime",
-    "vote",
-    "xkcd",
-    "weather",
-    "server",
-    "pbf",
-    "info"
+    "stats"
+  ],
+  "tasks": [
+    "statsHandler"
   ],
   "openshift": {
     "heartbeat_channel": "keepalive",
