@@ -21,6 +21,9 @@ Free (Exercise Focused): Learn Ruby the Hard Way
 Free (Exercise Focused): Codecademy Ruby
 <https://www.codecademy.com/learn/ruby>
 
+Free (Ruby on Rails 5) : Ruby on Rails Tutorial
+<https://www.railstutorial.org/book/>
+
 Free (Ruby on Rails): Learn Ruby on Rails from Scratch
 <https://www.udemy.com/learn-ruby-on-rails-from-scratch>
 
