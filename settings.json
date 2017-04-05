@@ -39,7 +39,8 @@
     "rank",
     "channel",
     "users",
-    "leaderboard"
+    "leaderboard",
+    "me"
   ],
   "openshift": {
     "heartbeat_channel": "keepalive",

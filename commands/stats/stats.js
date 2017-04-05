@@ -230,6 +230,47 @@ function getLeaderboard(message, backUnit) {
   });
 }
 
+function getGroupMsgTimes(message, messages) {
+  let groupedData = [];
+
+    const userGraph = {
+    x: [],
+    y: [],
+    type: 'scatter',
+  };
+
+  messages.forEach((msg) => {
+    const hoursSinceEpoch = Math.floor(Date.parse(msg) / 3600000);
+    if (userGraph.x.length === 0 || userGraph.x[userGraph.x.length - 1] !== hoursSinceEpoch) {
+      userGraph.x.push(hoursSinceEpoch);
+      userGraph.y.push(1);
+    } else {
+      userGraph.y[userGraph.y.length - 1]++;
+    }
+  });
+
+  sendGraph(message.channel, userGraph, 'User History For ' + message.member.nickname, 'Time', 'Msgs/Hr');
+}
+
+function getSpecificUserStats(message) {
+  // Graph msgs per hour over time
+  let rawData = [];
+
+  let dbQuery = 'SELECT Date from Leaderboard where Name = ?;'
+
+  db.each(dbQuery, message.member.id, (err, row) => {
+    if (row !== undefined) {
+      rawData.push(row.Date);
+    }
+  }, (err) => {
+    if (rawData.length > 0 ) {
+      getGroupMsgTimes(message,rawData);
+    } else {
+      message.channel.sendMessage('You have no messages! :(');
+    }
+  });
+}
+
 module.exports = {
   usage: [
     'channel <channel name> <hourly/daily/weekly/monthly/forever>- list statistics for specific channel.' +
@@ -238,7 +279,8 @@ module.exports = {
     ' Two parameters are optional. Defaults to daily.',
     'users <hourly/daily/weekly/monthly/forever> - list stats on total users. Parameter is ' +
     'optional. Defaults to daily.',
-    'leaderboard <hourly/daily/weekly/monthly/forever>- list most active users',
+    'leaderboard <hourly/daily/weekly/monthly/forever> - list most active users',
+    'me - Get some sweet stats on yourself'
   ],
   run: (bot, message, cmdArgs) => {
     const splitArgs = cmdArgs.split(' ');
@@ -270,6 +312,8 @@ module.exports = {
         getLeaderboard(message, backUnit);
       } else if (baseCmd === 'channel') {
         getStats(cmdArgs.split(' ')[1], message, backUnit);
+      } else if (baseCmd == 'me') {
+        getSpecificUserStats(message);
       }
     }
     return false;
