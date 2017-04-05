@@ -31,6 +31,7 @@ function sendGraph(channel, graphData, graphTitle, xLabel, yLabel) {
     if (error) {
       console.log(error);
       channel.sendMessage("There was an error getting your plot, sorry!");
+      return;
     }
 
     toArray(imageStream).then((parts) => {
@@ -255,13 +256,7 @@ function getGroupMsgTimes(message, messages) {
     }
   });
 
-  let userName = message.member.nickname;
-
-  if (userName === null ) {
-    userName = message.member.name;
-  }
-
-  sendGraph(message.channel, userGraph, 'User History For ' + userName, 'Time', 'Msgs/Hr');
+  sendGraph(message.channel, userGraph, 'User History For ' + message.member.displayName, 'Time', 'Msgs/Hr');
 }
 
 function getSpecificUserStats(message, backUnit) {
