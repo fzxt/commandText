@@ -239,15 +239,20 @@ function getGroupMsgTimes(message, messages) {
     type: 'scatter',
   };
 
+  const epochDates = [];
+
   messages.forEach((msg) => {
     const hoursSinceEpoch = Math.floor(Date.parse(msg) / 3600000);
-    if (userGraph.x.length === 0 || userGraph.x[userGraph.x.length - 1] !== hoursSinceEpoch) {
-      userGraph.x.push(hoursSinceEpoch);
+    if (userGraph.x.length === 0 || epochDates[epochDates.length - 1] !== hoursSinceEpoch) {
+      userGraph.x.push(new Date(hoursSinceEpoch * 3600000).toISOString());
+      epochDates.push(hoursSinceEpoch);
       userGraph.y.push(1);
     } else {
       userGraph.y[userGraph.y.length - 1]++;
     }
   });
+
+  console.log(userGraph);
 
   sendGraph(message.channel, userGraph, 'User History For ' + message.member.nickname, 'Time', 'Msgs/Hr');
 }
