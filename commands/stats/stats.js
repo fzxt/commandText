@@ -252,16 +252,15 @@ function getGroupMsgTimes(message, messages) {
     }
   });
 
-  console.log(userGraph);
-
   sendGraph(message.channel, userGraph, 'User History For ' + message.member.nickname, 'Time', 'Msgs/Hr');
 }
 
-function getSpecificUserStats(message) {
+function getSpecificUserStats(message, backUnit) {
   // Graph msgs per hour over time
   let rawData = [];
 
-  let dbQuery = 'SELECT Date from Leaderboard where Name = ?;'
+  let dbQuery = 'SELECT Date from Leaderboard where Name = ? AND Date BETWEEN datetime' +
+  '(\'now\',\'' + backUnit + '\') AND datetime(\'now\');'
 
   db.each(dbQuery, message.member.id, (err, row) => {
     if (row !== undefined) {
@@ -318,7 +317,7 @@ module.exports = {
       } else if (baseCmd === 'channel') {
         getStats(cmdArgs.split(' ')[1], message, backUnit);
       } else if (baseCmd == 'me') {
-        getSpecificUserStats(message);
+        getSpecificUserStats(message, backUnit);
       }
     }
     return false;
