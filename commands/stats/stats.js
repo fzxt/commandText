@@ -28,7 +28,10 @@ function sendGraph(channel, graphData, graphTitle, xLabel, yLabel) {
   };
 
   plotly.getImage(figure, imgOpts, (error, imageStream) => {
-    if (error) return console.log(error);
+    if (error) {
+      console.log(error);
+      channel.sendMessage("There was an error getting your plot, sorry!");
+    }
 
     toArray(imageStream).then((parts) => {
       const buffers = parts.map(part => (util.isBuffer(part) ? part : Buffer.from(part)));
@@ -252,7 +255,13 @@ function getGroupMsgTimes(message, messages) {
     }
   });
 
-  sendGraph(message.channel, userGraph, 'User History For ' + message.member.nickname, 'Time', 'Msgs/Hr');
+  let userName = message.member.nickname;
+
+  if (userName === null ) {
+    userName = message.member.name;
+  }
+
+  sendGraph(message.channel, userGraph, 'User History For ' + userName, 'Time', 'Msgs/Hr');
 }
 
 function getSpecificUserStats(message, backUnit) {
