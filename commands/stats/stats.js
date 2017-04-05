@@ -2,6 +2,7 @@ const sqlite3 = require('sqlite3');
 const discord = require('discord.js');
 const toArray = require('stream-to-array');
 const util = require('util');
+const pythonShell = require('python-shell');
 
 let plotly;
 let db;
@@ -9,39 +10,36 @@ let client;
 let config;
 
 function sendGraph(channel, graphData, graphTitle, xLabel, yLabel) {
-  const figure = {
-    data: [graphData],
-    layout: {
-      title: graphTitle,
-      xaxis: {
-        title: xLabel,
-      },
-      yaxis: {
-        title: yLabel,
-      },
-    },
-  };
-  const imgOpts = {
-    format: 'png',
-    width: 1000,
-    height: 500,
+  let xStr = ''
+  graphData.x.forEach((val) => {
+    xStr += val + ','
+  });
+
+  xStr = xStr.substr(0, xStr.length - 1);
+
+  let yStr = ''
+  graphData.y.forEach((val) => {
+    yStr += val + ','
+  });
+
+  yStr = yStr.substr(0, yStr.length - 1);
+  var options = {
+    mode: 'text',
+    args: [xStr, yStr, xLabel, yLabel, graphTitle]
   };
 
-  plotly.getImage(figure, imgOpts, (error, imageStream) => {
-    if (error) {
-      console.log(error);
-      channel.sendMessage("There was an error getting your plot, sorry!");
+  pythonShell.run('plot.py', options, function (err, results) {
+    if (err) {
+      console.log(err);
+      channel.sendMessage("Error plotting your graph!");
       return;
     }
-
-    toArray(imageStream).then((parts) => {
-      const buffers = parts.map(part => (util.isBuffer(part) ? part : Buffer.from(part)));
-      channel.sendFile(Buffer.concat(buffers));
-    });
-
-    // Not sure why lint is making me do this
-    return imageStream;
+    // results is an array consisting of messages collected during execution 
+    channel.sendFile('graph.png');
   });
+
+
+  return;
 }
 
 function getChannelNameFromId(channelId) {
