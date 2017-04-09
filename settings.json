@@ -37,6 +37,7 @@
     "weather",
     "server",
     "pbf",
+    "quickref",
     "info"
   ],
   "openshift": {

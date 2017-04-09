@@ -29,7 +29,7 @@ function updateProsMatcher() {
 
 function getProsOnline(guild) {
   return new Set(guild.members
-    .filter(m => m.roles.find('name', 'Pros') && ['online', 'idle'].includes(m.presence.status))
+    .filter(m => m.roles.find('name', 'Helpers') && ['online', 'idle'].includes(m.presence.status))
     .map(p => p.user.username));
 }
 
