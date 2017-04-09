@@ -26,7 +26,6 @@ module.exports = {
         message.channel.sendMessage(
           `${response}`);
       } else {
-
         message.channel.sendMessage('I don\'t have any references for that. If you have a suggestion, let us know!');
       }
     } else {
