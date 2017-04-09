@@ -1,10 +1,10 @@
 See these links/courses for learning Java:
 
-Documentation for Java 7
-<https://docs.oracle.com/javase/7/docs/api/>
-
-Documentation for Java 8
+Documentation (Java 8)
 <https://docs.oracle.com/javase/8/docs/api/>
 
-Tutorials
+Official Oracle tutorials
 <https://docs.oracle.com/javase/tutorial/>
+
+Free Course: Object-Oriented programming with Java, part I & II (University of Helsinki)
+http://mooc.fi/courses/2013/programming-part-1/
