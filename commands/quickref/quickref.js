@@ -11,10 +11,6 @@ const loadReferences = (filename) => {
   return content || '';
 };
 
-function isEmptyOrSpaces(str) {
-  return str === null || str.match(/^ *$/) !== null;
-}
-
 const references = {};
 
 module.exports = {
