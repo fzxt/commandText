@@ -3,6 +3,9 @@ See these links/courses for learning Python:
 Documentation
 <https://docs.python.org/3/>
 
+Free to Read Online: A Byte of Python
+https://python.swaroopch.com/
+
 Free to Read Online: Introduction to Programming for Beginners
 <http://greenteapress.com/wp/think-python-2e/>
 
