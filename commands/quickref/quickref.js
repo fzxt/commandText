@@ -29,7 +29,6 @@ module.exports = {
         message.channel.sendMessage('I don\'t have any references for that. If you have a suggestion, let us know!');
       }
     } else {
-      // let r = 'Awesome is my name, don\'t wear it out! Please give a me topic for more info.';
       let r = '\nreferences I have ready to go:';
       r += '\n```';
       r += Object.keys(references).map(t => `\n  - ${t}`).join('');
