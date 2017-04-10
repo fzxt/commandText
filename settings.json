@@ -27,11 +27,11 @@
     "repo":"rgoliveira/awesomebot"
   },
   "commands": [
+    "uptime",
     "help",
     "eval",
     "pro",
     "stream",
-    "uptime",
     "vote",
     "xkcd",
     "weather",
