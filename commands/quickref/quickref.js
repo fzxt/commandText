@@ -16,7 +16,7 @@ const references = {};
 module.exports = {
   usage: [
     'quickref <topic> - displays quick reference for <topic>',
-    'help - list known references',
+    'quickref - list known references',
   ],
   run: (bot, message, cmdArgs) => {
     if (cmdArgs) {
