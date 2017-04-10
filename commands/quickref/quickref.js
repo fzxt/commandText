@@ -37,7 +37,7 @@ module.exports = {
     }
   },
   init: () => {
-    console.log('Loading references...');
+    console.log('Loading quickrefs...');
     getFileList(path.join(__dirname, 'references')).forEach((fn) => {
       references[path.basename(fn, '.txt')] = loadReferences(path.join(__dirname, 'references', fn));
     });
