@@ -29,8 +29,8 @@ module.exports = {
         try {
           xkcdBody('.result__a').each((i, link) => {
             const href = link.attribs.href;
-            if (href.search(/^https?:\/\/(www\.)?xkcd\.com\//) !== -1 && xkcdLink === false) {
-              xkcdLink = href;
+            if (href.search(/^https?:\/\/(www\.)?xkcd\.com\/\d+/) !== -1 && xkcdLink === false) {
+              xkcdLink = href + 'info.0.json';
             }
           });
         } catch (e) {
@@ -39,29 +39,20 @@ module.exports = {
         // we are done with finding a link
         if (!xkcdLink) {
           // link is either empty (this should NOT happen) or we don't have a link
-          message.channel.sendMessage(`I'm sorry ${message.author}, i couldn't find a xkcd.`);
+          message.channel.sendMessage(`I'm sorry ${message.author}, I couldn't find a xkcd.`);
         } else {
           request(xkcdLink, (error, response, body) => {
             if (!error && response.statusCode === 200) {
-              // we have successfully got a response
-              const htmlBody = cheerio.load(body);
+              const bodyObj = JSON.parse(body);
 
-              if (htmlBody('#comic').children().get(0).tagName === 'img') {
-                // some xkcd comics have comic in a <a> tag because of hd image
-                // TODO (samox) : Add support for large comics
-                const xkcdImg = htmlBody('#comic').children().first();
+              if (bodyObj) {
                 message.channel.sendMessage('```diff\n' +
-                  `Title: ${htmlBody('#ctitle').text()}\n` +
-                  `Alt Text: ${xkcdImg.attr('title')}\n` +
-                  '```\n' +
-                  `https:${xkcdImg.attr('src')}`);
-
-                if (config.limitMessages) {
-                  // we don't want users spamming it
-                  lastMessageTime = Math.floor(Date.now() / 1000);
-                }
+                `Title: ${bodyObj.safe_title}\n` +
+                `Alt Text: ${bodyObj.alt}\n` +
+                '```\n' +
+                `${bodyObj.img}`);
               } else {
-                message.channel.sendMessage(`I'm sorry ${message.author}, i couldn't find a xkcd.`);
+                message.channel.sendMessage(`I'm sorry, ${message.author}, there was a problem retrieving your XKCD.`);
               }
             }
           });
