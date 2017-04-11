@@ -1,4 +1,5 @@
 ```
+CTRL - K                           Quick Switcher
 CTRL - ALT - UP ARROW              Server Up
 CTRL - ALT - DOWN ARROW            Server Down
 ALT - UP ARROW                     Channel Up
