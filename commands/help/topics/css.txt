@@ -3,6 +3,9 @@ See these links for learning CSS:
 Tutorials/Documentation (In-depth)
 <https://developer.mozilla.org/en-US/docs/Web/CSS>
 
+A Free Visual Guide to CSS:
+<http://cssreference.io/>
+
 Free Course: Learn the basics of HTML and CSS
 <https://codecademy.com/learn/web>
 
