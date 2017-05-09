@@ -9,6 +9,9 @@ Free to Read Online: A Modern Introduction to Programming
 Free to Read Online: Exploring ES6
 <http://exploringjs.com/es6/>
 
+Free to Read Online: Exploring ES2016-ES2017
+<http://exploringjs.com/es2016-es2017/index.html>
+
 Free Course: Fundamental Programming Concepts
 <https://codecademy.com/learn/javascript>
 
