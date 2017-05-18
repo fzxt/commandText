@@ -90,9 +90,12 @@ module.exports = {
 
     message.channel.sendMessage('⏲ evaluating...')
       .then((evalMsg) => {
-        let newContent = '';
+        let newContent    = '';
+        const codeRegex   = /^(`{1,3}).{0,10}\s{0,}((.|\s){1,})(\1)$/gi
+        const wrappedCode = cmdArgs.split(' ').slice(1).join(' ');
+        const code        = codeRegex.exec(wrappedCode)[2];
         repl.evaluateOnce(
-          cmdArgs.split(' ').slice(1).join(' '), {
+          code, {
             stdout: (output) => {
               newContent += `Code output:\n\`\`\`\n${output}\n\`\`\`\n`;
             },
