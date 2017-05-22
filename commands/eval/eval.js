@@ -76,10 +76,9 @@ module.exports = {
     // regex to parse the message
     const rx = /^(`{0,3})(javascript|js|nodejs|php|c\+\+11|c\+\+|cpp11|cpp|lua|python3|python|py2|py3|py|java|go|rust|swift|csharp|c#|fsharp|f#|ruby|rb|c)\s{0,}((.|\s){1,})(\1)$/gi;
     const argsArr = rx.exec(cmdArgs);
-    
     // parsing the message to get the lang and code
     let lang = argsArr[2].toLowerCase();
-    let code = (/^(`{0,3})\s{0,}((.|\s){1,})(\1)$/gi).exec(argsArr[3])[2];
+    const code = (/^(`{0,3})\s{0,}((.|\s){1,})(\1)$/gi).exec(argsArr[3])[2];
     
     lang = validateLang(lang);
     if (!lang) {
@@ -95,7 +94,7 @@ module.exports = {
 
     message.channel.sendMessage('⏲ evaluating...')
       .then((evalMsg) => {
-        let newContent    = '';
+        let newContent = '';
         repl.evaluateOnce(
           code, {
             stdout: (output) => {
