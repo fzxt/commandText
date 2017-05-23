@@ -90,7 +90,6 @@ module.exports = {
     // parsing the message to get the lang and code
     let lang = argsArr[2].toLowerCase();
     const code = (/^(`{0,3})\s{0,}((.|\s){1,})(\1)$/gi).exec(argsArr[3])[2];
-    
     lang = validateLang(lang);
     if (!lang) {
       message.reply('Sorry, I don\'t know that language!');
