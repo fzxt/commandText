@@ -74,7 +74,15 @@ module.exports = {
     }
 
     // regex to parse the message
-    const rx = /^(`{0,3})(javascript|js|nodejs|php|c\+\+11|c\+\+|cpp11|cpp|lua|python3|python|py2|py3|py|java|go|rust|swift|csharp|c#|fsharp|f#|ruby|rb|c)\s{0,}((.|\s){1,})(\1)$/gi;
+    let rxLangs = Object.keys(langAliases)
+                       .map(v => v === 'c++' ?
+                                'c\\+\\+'    :
+                                v === 'c++11'?
+                                'c\\+\\+11'  :
+                                v)
+    rxLangs.push(...availableLanguages)
+    rxLangs = rxLangs.sort((a, b) => b.length - a.length).join('|')
+    const rx = new RegExp('^(`{0,3})('+ rxLangs + ')\\s{0,}((.|\\s){1,})(\\1)$', 'gi')
     const argsArr = rx.exec(cmdArgs);
     // parsing the message to get the lang and code
     let lang = argsArr[2].toLowerCase();
