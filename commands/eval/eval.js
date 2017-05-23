@@ -73,9 +73,22 @@ module.exports = {
       return;
     }
 
-    // check if there's any arguments first
-    let lang = cmdArgs.split(' ')[0].toLowerCase();
-
+    // parsing the messages against regex to obtain the lang and code
+    let rxLangs = Object.keys(langAliases)
+                        .map((v) => {
+                          if (v === 'c++') {
+                            return 'c\\+\\+';
+                          } else if (v === 'c++11') {
+                            return 'c\\+\\+11';
+                          }
+                          return v;
+                        });
+    rxLangs.push(...availableLanguages);
+    rxLangs = rxLangs.sort((a, b) => b.length - a.length).join('|');
+    const rx = new RegExp('^(`{0,3})(' + rxLangs + ')\\s{0,}((.|\\s){1,})(\\1)$', 'gi');
+    const argsArr = rx.exec(cmdArgs);
+    let lang = argsArr[2].toLowerCase();
+    const code = (/^(`{0,3})\s{0,}((.|\s){1,})(\1)$/gi).exec(argsArr[3])[2];
     lang = validateLang(lang);
     if (!lang) {
       message.reply('Sorry, I don\'t know that language!');
@@ -92,7 +105,7 @@ module.exports = {
       .then((evalMsg) => {
         let newContent = '';
         repl.evaluateOnce(
-          cmdArgs.split(' ').slice(1).join(' '), {
+          code, {
             stdout: (output) => {
               newContent += `Code output:\n\`\`\`\n${output}\n\`\`\`\n`;
             },
