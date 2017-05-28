@@ -1,12 +1,12 @@
 /* eslint-disable class-methods-use-this */
 const path = require('path');
 const Discord = require('discord.js');
-
 const Settings = require('./settings.json'); // eslint-disable-line import/no-dynamic-require
+
 let Tokens;
 try {
   // eslint-disable-next-line global-require, import/no-dynamic-require
-  Tokens = require('./tokens.json'));
+  Tokens = require('./tokens.json');
 } catch (e) {
   Tokens = {};
 }
@@ -39,7 +39,7 @@ class TheAwesomeBot {
       const cmdMatch = message.cleanContent.match(this.cmd_re);
 
       // not a known command
-      if (!cmdMatch || Object.keys(this.commands).indexOf(cmdMatch[1]) === -1) {
+      if (!cmdMatch || this.commands.indexOf(cmdMatch[1]) === -1) {
         if (message.content.match(new RegExp(`^${this.settings.bot_cmd}[\\s]*( .*)?$`, 'i'))) {
           let helpText = 'maybe try these valid commands? *kthnxbye!*\n\n```';
           helpText += this.usageList;
@@ -78,7 +78,7 @@ class TheAwesomeBot {
     return (() => {
       console.log('\nConnected to discord server!');
       console.log('Running initializations...');
-      Object.keys(this.commands).filter(cmd =>
+      this.commands.filter(cmd =>
         typeof this.commands[cmd].init === 'function')
       .forEach(cmd => this.commands[cmd].init(this));
       this.isReady = true;
@@ -103,23 +103,26 @@ class TheAwesomeBot {
 
   loadCommands(cmdList) {
     this.usageList = '';
-    cmdList.forEach((cmd) => {
-      const fullpath = path.join(__dirname, 'commands', cmd, `${cmd}.js`);
-      const script = require(fullpath); // eslint-disable-line global-require, import/no-dynamic-require
-      this.commands[cmd] = script;
+    for (let x = 0; x < cmdList.length; x++) { // eslint-disable-line no-plusplus
+      const script = require(`./commands/${cmdList[x]}/${cmdList[x]}.js`); // eslint-disable-line global-require, import/no-dynamic-require, max-len
+      this.commands[x] = script;
 
       const usageObj = script.usage;
       if (usageObj) {
         const usageStrs = [];
         if (Array.isArray(usageObj)) {
-          usageObj.forEach(u => usageStrs.push(u));
+          for (let i = 0; i < usageObj.length; i++) { // eslint-disable-line no-plusplus
+            usageStrs.push(usageObj[x]);
+          }
         } else {
           usageStrs.push(usageObj.toString());
         }
 
-        usageStrs.forEach(u => (this.usageList += `\n- ${this.settings.bot_cmd} ${u}`));
+        for (let i = 0; i < usageStrs.length; i++) { // eslint-disable-line no-plusplus
+          this.usageList += `\n- ${this.settings.bot_cmd} ${usageStrs[x]}`;
+        }
       }
-    });
+    }
   }
 
   init() {

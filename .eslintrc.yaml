@@ -8,5 +8,6 @@ rules:
   no-unused-vars: [error, {argsIgnorePattern: '^(err$|_)'}]
   no-param-reassign: [error, {props: false}]
   import/no-unresolved: [error, {ignore: ['tokens.json']}]
+  linebreak-style: off
 extends: airbnb
 installedESLint: true
