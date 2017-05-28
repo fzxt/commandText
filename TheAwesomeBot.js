@@ -38,7 +38,7 @@ class TheAwesomeBot {
       const cmdMatch = message.cleanContent.match(this.cmd_re);
 
       // not a known command
-      if (!cmdMatch || this.commands.indexOf(cmdMatch[1]) === -1) {
+      if (!cmdMatch || Array.from(this.commands).indexOf(cmdMatch[1]) === -1) {
         if (message.content.match(new RegExp(`^${this.settings.bot_cmd}[\\s]*( .*)?$`, 'i'))) {
           let helpText = 'maybe try these valid commands? *kthnxbye!*\n\n```';
           helpText += this.usageList;
@@ -77,7 +77,7 @@ class TheAwesomeBot {
     return (() => {
       console.log('\nConnected to discord server!');
       console.log('Running initializations...');
-      this.commands.filter(cmd =>
+      Array.from(this.commands).filter(cmd =>
         typeof this.commands[cmd].init === 'function')
       .forEach(cmd => this.commands[cmd].init(this));
       this.isReady = true;
@@ -111,14 +111,14 @@ class TheAwesomeBot {
         const usageStrs = [];
         if (Array.isArray(usageObj)) {
           for (let i = 0; i < usageObj.length; i++) { // eslint-disable-line no-plusplus
-            usageStrs.push(usageObj[x]);
+            usageStrs.push(usageObj[i]);
           }
         } else {
           usageStrs.push(usageObj.toString());
         }
 
         for (let i = 0; i < usageStrs.length; i++) { // eslint-disable-line no-plusplus
-          this.usageList += `\n- ${this.settings.bot_cmd} ${usageStrs[x]}`;
+          this.usageList += `\n- ${this.settings.bot_cmd} ${usageStrs[i]}`;
         }
       }
     }
