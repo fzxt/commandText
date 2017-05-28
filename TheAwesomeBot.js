@@ -1,5 +1,4 @@
 /* eslint-disable class-methods-use-this */
-const path = require('path');
 const Discord = require('discord.js');
 const Settings = require('./settings.json'); // eslint-disable-line import/no-dynamic-require
 
