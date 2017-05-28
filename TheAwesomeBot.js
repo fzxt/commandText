@@ -2,11 +2,11 @@
 const path = require('path');
 const Discord = require('discord.js');
 
-const Settings = require(path.join(__dirname, 'settings.json')); // eslint-disable-line import/no-dynamic-require
+const Settings = require('./settings.json'); // eslint-disable-line import/no-dynamic-require
 let Tokens;
 try {
   // eslint-disable-next-line global-require, import/no-dynamic-require
-  Tokens = require(path.join(__dirname, 'tokens.json'));
+  Tokens = require('./tokens.json'));
 } catch (e) {
   Tokens = {};
 }
