@@ -31,7 +31,7 @@ class TheAwesomeBot {
   onMessage() {
     return (message) => {
       // don't respond to own messages
-      if (this.client.user.username === message.author.username) {
+      if (this.client.user.id === message.author.id) {
         return;
       }
 
