@@ -88,7 +88,7 @@ module.exports = {
       80,
       lang, gentoken(apiToken));
 
-    message.channel.sendMessage('⏲ evaluating...')
+    message.channel.send('⏲ evaluating...')
       .then((evalMsg) => {
         let newContent = '';
         repl.evaluateOnce(

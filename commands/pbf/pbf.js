@@ -9,12 +9,12 @@ function parsePbfLink(pbfLink, message) {
 
       if (htmlBody('#topimg')) {
         const img = htmlBody('#topimg');
-        message.channel.sendMessage('```diff\n' +
+        message.channel.send('```diff\n' +
           `Title: ${img.attr('alt')}\n` +
           '```\n' +
           `http://pbfcomics.com${img.attr('src')}`);
       } else {
-        message.channel.sendMessage(`I'm sorry ${message.author}, i couldn't find a PBF Comic.`);
+        message.channel.send(`I'm sorry ${message.author}, i couldn't find a PBF Comic.`);
       }
     }
   });
@@ -48,12 +48,12 @@ module.exports = {
             }
           });
         } catch (e) {
-          message.channel.sendMessage('There was a problem with DuckDuckGo query.');
+          message.channel.send('There was a problem with DuckDuckGo query.');
         }
         // we are done with finding a link
         if (!pbfLink) {
           // link is either empty (this should NOT happen) or we don't have a link
-          message.channel.sendMessage(`I'm sorry ${message.author}, i couldn't find a PBF Comic.`);
+          message.channel.send(`I'm sorry ${message.author}, i couldn't find a PBF Comic.`);
         } else {
           parsePbfLink(pbfLink, message);
         }
