@@ -4,6 +4,7 @@ function fixEscapes(str) {
 
 let proLangRe;
 let pros;
+const proHelpText = {};
 
 function updateProsMatcher() {
   /* eslint global-require: off */
@@ -41,6 +42,7 @@ function loadAndMatchPros(bot) {
   return helpChannel.fetchMessages({ limit: 100 })
   .then((messages) => {
     messages.forEach((messageObj) => {
+      proHelpText[messageObj.author.id] = messageObj.content;
       proLangRe.lastIndex = 0;
       while (true) {
         const match = proLangRe.exec(messageObj.content);
@@ -67,12 +69,25 @@ function getPros(bot, lang) {
 module.exports = {
   usage: [
     'pro <topic> - list of people who knows about <topic>',
+    'pro <username mention> - get help directory entry for specific pro',
     'pro reset - reload all the pro data (mod only)',
   ],
 
   run(bot, message, cmdArgs) {
     if (!cmdArgs) {
       return true;
+    }
+
+    if (message.mentions.members.size > 0) {
+      const memberId = message.mentions.members.first().id;
+      if (memberId in proHelpText) {
+        let response = `**Help Directory entry for user ${message.mentions.members.first().displayName}:**\n`;
+        response += proHelpText[memberId];
+        message.channel.sendMessage(response);
+      } else {
+        message.channel.sendMessage(`Could not find user ${message.mentions.members.first().displayName} in directory`);
+      }
+      return false;
     }
 
     let lang = cmdArgs.toLowerCase().trim();
