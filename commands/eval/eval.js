@@ -88,7 +88,7 @@ module.exports = {
     const rx = new RegExp('^(`{0,3})(' + rxLangs + ')\\s*((.|\\s)+)(\\1)$', 'gi');
     const argsArr = rx.exec(cmdArgs);
     let lang = argsArr[2].toLowerCase();
-    const code = (new RegExp('^(`{0,3})((' + rxLangs + '|.{0})\\s)?\\s*((.|\\s)+)(\\1)$', 'gi')).exec(argsArr[3])[3];
+    const code = (new RegExp('^(`{0,3})((' + rxLangs + '|.{0})\\s)?\\s*((.|\\s)+)(\\1)$', 'gi')).exec(argsArr[3])[4];
     lang = validateLang(lang);
     if (!lang) {
       message.reply('Sorry, I don\'t know that language!');
