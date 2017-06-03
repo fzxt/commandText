@@ -1,13 +1,18 @@
 Use codeblocks for formatting code (line breaks matter!):
-\```language_name
+```
+```language_name
 # code here
-\```
+```
+```
 
 For example:
-\```python
+```
+```python
 if True:
     print("Hi!")
-\```
+```
+```
+
 prints:
 ```python
 if True:
