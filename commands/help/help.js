@@ -23,7 +23,7 @@ module.exports = {
   run: (bot, message, cmdArgs) => {
     if (cmdArgs) {
       const response = knownTopics[cmdArgs.toLowerCase()];
-      message.channel.sendMessage(response ||
+      message.channel.send(response ||
         'I don\'t know anything about that. If you have a suggestion, let us know!');
     } else {
       let r = 'Awesome is my name, don\'t wear it out! Please give a me topic for more info.';
@@ -31,7 +31,7 @@ module.exports = {
       r += '\n```';
       r += Object.keys(knownTopics).map(t => `\n  - ${t}`).join('');
       r += '\n```';
-      message.channel.sendMessage(r);
+      message.channel.send(r);
     }
   },
 

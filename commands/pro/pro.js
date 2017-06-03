@@ -94,7 +94,7 @@ module.exports = {
 
     if (lang === 'reset' && bot.isAdminOrMod(message.member)) {
       loadAndMatchPros(bot).then(() => {
-        message.channel.sendMessage('Pros list refreshed.');
+        message.channel.send('Pros list refreshed.');
         return false;
       })
       .catch((err) => {
@@ -109,7 +109,7 @@ module.exports = {
     lang = ((match && match[1]) || lang).toLowerCase();
 
     const foundPros = getPros(bot, lang);
-    message.channel.sendMessage(foundPros ?
+    message.channel.send(foundPros ?
       `Here are some pros online that can help with **${pros[lang].original}**: \n${foundPros}` :
       `No pros found for ${cmdArgs} :(`);
     return false;

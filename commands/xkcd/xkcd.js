@@ -34,25 +34,25 @@ module.exports = {
             }
           });
         } catch (e) {
-          message.channel.sendMessage('There was a problem with DuckDuckGo query.');
+          message.channel.send('There was a problem with DuckDuckGo query.');
         }
         // we are done with finding a link
         if (!xkcdLink) {
           // link is either empty (this should NOT happen) or we don't have a link
-          message.channel.sendMessage(`I'm sorry ${message.author}, I couldn't find a xkcd.`);
+          message.channel.send(`I'm sorry ${message.author}, I couldn't find a xkcd.`);
         } else {
           request(xkcdLink, (error, response, body) => {
             if (!error && response.statusCode === 200) {
               const bodyObj = JSON.parse(body);
 
               if (bodyObj) {
-                message.channel.sendMessage('```diff\n' +
+                message.channel.send('```diff\n' +
                 `Title: ${bodyObj.safe_title}\n` +
                 `Alt Text: ${bodyObj.alt}\n` +
                 '```\n' +
                 `${bodyObj.img}`);
               } else {
-                message.channel.sendMessage(`I'm sorry, ${message.author}, there was a problem retrieving your XKCD.`);
+                message.channel.send(`I'm sorry, ${message.author}, there was a problem retrieving your XKCD.`);
               }
             }
           });

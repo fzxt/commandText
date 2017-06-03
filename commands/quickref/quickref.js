@@ -23,17 +23,17 @@ module.exports = {
       const response = references[cmdArgs.toLowerCase()];
 
       if (response) {
-        message.channel.sendMessage(
+        message.channel.send(
           `${response}`);
       } else {
-        message.channel.sendMessage('I don\'t have any references for that. If you have a suggestion, let us know!');
+        message.channel.send('I don\'t have any references for that. If you have a suggestion, let us know!');
       }
     } else {
       let r = '\nreferences I have ready to go:';
       r += '\n```';
       r += Object.keys(references).map(t => `\n  - ${t}`).join('');
       r += '\n```';
-      message.channel.sendMessage(r);
+      message.channel.send(r);
     }
   },
   init: () => {

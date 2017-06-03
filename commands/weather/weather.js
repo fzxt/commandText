@@ -37,14 +37,14 @@ module.exports = {
 
     request(requestURL, (err, res, bod) => {
       if (err) {
-        message.chanel.sendMessage('There was a problem with geocoding request.');
+        message.chanel.send('There was a problem with geocoding request.');
         return;
       }
 
       const geocodeData = JSON.parse(bod);
 
       if (geocodeData.status !== 'OK') {
-        message.channel.sendMessage(`I'm sorry ${message.author}, your address couldn't be detected.`);
+        message.channel.send(`I'm sorry ${message.author}, your address couldn't be detected.`);
         return;
       }
 
