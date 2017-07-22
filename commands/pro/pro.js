@@ -57,6 +57,9 @@ function loadAndMatchPros(bot) {
 
 
 function getPros(bot, lang) {
+  if (lang === 'log') {
+    lang = 'prolog';
+  }
   if (!pros[lang]) {
     return null;
   }
