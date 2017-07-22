@@ -56,10 +56,11 @@ function loadAndMatchPros(bot) {
 }
 
 
-function getPros(bot, lang) {
+function getPros(bot, originalLang) {
+  const lang = (originalLang === 'log') ? 'prolog' : originalLang;
   if (!pros[lang]) {
     return null;
-  }
+  }  
   const langPros = Array.from(pros[lang]);
   const guild = bot.client.guilds.first();
   const online = getProsOnline(guild);
