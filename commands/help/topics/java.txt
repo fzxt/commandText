@@ -8,3 +8,6 @@ Official Oracle tutorials
 
 Free Course: Object-Oriented programming with Java, part I & II (University of Helsinki)
 http://mooc.fi/courses/2013/programming-part-1/
+
+Free materials: MIT 6.005: Software Construction (Warning: Needs some programming expirience)
+https://ocw.mit.edu/ans7870/6/6.005/s16/
