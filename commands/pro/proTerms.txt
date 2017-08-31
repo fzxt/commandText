@@ -54,6 +54,7 @@ Oracle SQL
 Pascal
 Powershell
 Perl
+PHP
 Python
 R
 Redis
