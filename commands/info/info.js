@@ -72,11 +72,14 @@ function getContributors() {
     headers: githubHeaders,
   }, (error, response, body) => {
     let jsonData = JSON.parse(body);
-    jsonData = jsonData.slice(0, 10);
-
-    jsonData.forEach((elem) => {
-      contributorsMessage += markdownLink.replace('$text', elem.login).replace('$link', elem.html_url) + '\n';
-    });
+    if (Array.isArray(jsonData) && jsonData.length >= 10) {
+      jsonData = jsonData.slice(0, 10);
+      contributorsMessage = jsonData.slice(0, 10).reduce((acc, cv) =>
+        acc + markdownLink.replace('$text', cv.login).replace('$link', cv.html_url) + '\n'
+      , '');
+    } else {
+      contributorsMessage = 'There was an error trying to get the contributors list :(';
+    }
   });
 }
 
