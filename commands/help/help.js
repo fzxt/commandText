@@ -30,7 +30,7 @@ module.exports = {
     //   r += '\n```';
     //   r += Object.keys(knownTopics).map(t => `\n  - ${t}`).join('');
     //   r += '\n```';
-      r = 'This command is deprecated.';
+      let r = 'This command is deprecated.';
       r += 'See https://github.com/progdisc/resources for our new and improved resource list.';
       message.channel.sendMessage(r);
   },
