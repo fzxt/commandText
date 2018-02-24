@@ -20,7 +20,7 @@ module.exports = {
   ],
 
   run: (bot, message) => {
-    let r = 'This command is deprecated.';
+    let r = 'This command is deprecated.\n';
     r += 'See https://github.com/progdisc/resources for our new and improved resource list.';
     message.channel.sendMessage(r);
   },
