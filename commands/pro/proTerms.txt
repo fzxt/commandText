@@ -1,5 +1,8 @@
 .NET|ASP.NET
 Ada
+Angular|Angular2
+AngularJS|Angular1
+Apache
 AppleScript
 Assembly|ASM|x86
 ATS
@@ -44,13 +47,17 @@ ML|SML
 Matlab
 Mongo
 Nim|Nimrod|Nimlang
+Ngnix
 OCaml
 Objective-C
+Oracle SQL
 Pascal
 Powershell
 Perl
+PHP
 Python
 R
+Redis
 Ruby
 Rust
 SmallTalk

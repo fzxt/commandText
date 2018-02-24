@@ -1,0 +1,16 @@
+```
+CTRL - K                           Quick Switcher
+CTRL - ALT - UP ARROW              Server Up
+CTRL - ALT - DOWN ARROW            Server Down
+ALT - UP ARROW                     Channel Up
+ALT - DOWN ARROW                   Channel Down
+ALT - SHIFT - UP ARROW             Unread channel up
+ALT - SHIFT - DOWN ARROW           Unread channel down
+CTRL - SHIFT - ALT - UP ARROW      Unread mention up
+CTRL - SHIFT - ALT - DOWN ARROW    Unread mention down
+ESC                                Mark channel as read
+SHIFT - ESC                        Mark server as read
+CTRL- ALT - A                      Return to active audio channel
+CTRL - B                           Return to last text channel
+SHIFT - PGUP                       Jump to oldest unread message
+```

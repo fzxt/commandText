@@ -1,0 +1,26 @@
+See these resources for tackling Machine Learning:
+
+Free Course - Andrew Ng's Course
+<https://www.coursera.org/learn/machine-learning>
+
+Free Course - Columbia's Artifical Intelligence Course
+<https://www.edx.org/micromasters/columbiax-artificial-intelligence>
+
+Free Course - fast.ai's introductory course for ML
+<http://www.fast.ai/>
+
+Free Book - Introduction to Statistical Learning
+<http://www-bcf.usc.edu/~gareth/ISL/>
+
+Free Book - Deep Learning Book
+<http://www.deeplearningbook.org/>
+
+Free Book - Neural Networks and Deep Learning
+<http://neuralnetworksanddeeplearning.com/chap1.html>
+
+YouTube - Sentdex
+<https://www.youtube.com/sentdex>
+
+YouTube - MIT OCW Artificial Intelligence
+<https://www.youtube.com/watch?v=TjZBTDzGeGg&list=PLUl4u3cNGP63gFHB6xb-kVBiQHYe_4hSi>
+

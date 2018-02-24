@@ -1,13 +1,25 @@
 See these links/courses for learning Python:
 
-https://docs.python.org/2/
+Documentation
+<https://docs.python.org/3/>
 
-https://docs.python.org/3/
+Free to Read Online: A Byte of Python
+<https://python.swaroopch.com/>
 
-https://www.udacity.com/course/programming-foundations-with-python--ud036
+Free to Read Online: Introduction to Programming for Beginners
+<http://greenteapress.com/wp/think-python-2e/>
 
-https://automatetheboringstuff.com/
+Free to Read Online: Language Basics and Task Automation
+<https://automatetheboringstuff.com/>
 
-https://www.udacity.com/course/intro-to-computer-science--cs101
+Paid Book (Free to Read Previous Versions): Tango With Django
+<http://www.tangowithdjango.com/>
 
-http://greenteapress.com/thinkpython2/html/index.html
+Free Course: Introduction to Computing using Python
+<https://www.edx.org/course/introduction-computing-using-python-gtx-cs1301x>
+
+Paid Course Library: In-depth Fundamentals, Flask, Django and more
+<https://teamtreehouse.com/library/topic:python>
+
+Free Course: Problem Solving with Algorithms and Data Structures using Python
+<https://runestone.academy/runestone/static/pythonds/index.html>

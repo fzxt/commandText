@@ -1,4 +1,4 @@
-# AwesomeBot [![Build Status](https://travis-ci.org/rgoliveira/AwesomeBot.svg?branch=master)](https://travis-ci.org/rgoliveira/AwesomeBot) [![Code Climate](https://codeclimate.com/github/rgoliveira/AwesomeBot/badges/gpa.svg)](https://codeclimate.com/github/rgoliveira/AwesomeBot) [![david-dm](https://david-dm.org/rgoliveira/AwesomeBot.svg)](https://david-dm.org/rgoliveira/AwesomeBot)
+# AwesomeBot [![Build Status](https://travis-ci.org/progdisc/AwesomeBot.svg?branch=master)](https://travis-ci.org/progdisc/AwesomeBot) [![Code Climate](https://codeclimate.com/github/progdisc/AwesomeBot/badges/gpa.svg)](https://codeclimate.com/github/progdisc/AwesomeBot) [![david-dm](https://david-dm.org/progdisc/AwesomeBot.svg)](https://david-dm.org/progdisc/AwesomeBot)
 
 ## How to run it
 First, make sure you have the latest version of [Node.js](https://nodejs.org/) and [npm](https://github.com/npm/npm).

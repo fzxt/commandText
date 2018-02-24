@@ -20,22 +20,24 @@
       "partly-cloudy-night": ":partly_sunny:",
       "fog": ":fog:",
       "cloudy":":cloud:",
-      "wind": "wind_blowing_face"
+      "wind": ":wind_blowing_face:"
     }
+  },
+  "info":{
+    "repo":"rgoliveira/awesomebot"
   },
   "commands": [
     "help",
-    "jseval",
+    "eval",
     "pro",
     "stream",
     "uptime",
     "vote",
     "xkcd",
     "weather",
-    "server"
-  ],
-  "openshift": {
-    "heartbeat_channel": "keepalive",
-    "heartbeat_interval_in_minutes": 30
-  }
+    "server",
+    "pbf",
+    "quickref",
+    "info"
+  ]
 }

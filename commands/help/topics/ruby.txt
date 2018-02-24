@@ -1,0 +1,31 @@
+See these links/courses for learning Ruby:
+
+Official Ruby Core 2.4.1 Documentation
+<http://ruby-doc.org/core-2.4.1/>
+
+Quickstart Guide: Ruby In Twenty Minutes
+<https://www.ruby-lang.org/en/documentation/quickstart/>
+
+Cheatsheet/Reference:
+<http://www.cheat-sheets.org/saved-copy/RubyCheat.pdf>
+
+Learn to Program with Ruby
+<https://pine.fm/LearnToProgram/>
+
+Free (Language Transition): Ruby From Other Languages
+<https://www.ruby-lang.org/en/documentation/ruby-from-other-languages/>
+
+Free (Exercise Focused): Learn Ruby the Hard Way
+<https://learnrubythehardway.org/book/>
+
+Free (Exercise Focused): Codecademy Ruby
+<https://www.codecademy.com/learn/ruby>
+
+Free (Ruby on Rails 5) : Ruby on Rails Tutorial
+<https://www.railstutorial.org/book/>
+
+Free (Ruby on Rails): Learn Ruby on Rails from Scratch
+<https://www.udemy.com/learn-ruby-on-rails-from-scratch>
+
+Paid (Course Library): TeamTreehouse: Learn Ruby
+<https://teamtreehouse.com/tracks/learn-ruby>

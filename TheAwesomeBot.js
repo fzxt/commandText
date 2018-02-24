@@ -1,10 +1,19 @@
+/* eslint-disable class-methods-use-this */
 const path = require('path');
 const Discord = require('discord.js');
-const Settings = require('./settings.json');
-const Tokens = require('./tokens.json');
+
+const Settings = require(path.join(__dirname, 'settings.json')); // eslint-disable-line import/no-dynamic-require
+let Tokens;
+try {
+  // eslint-disable-next-line global-require, import/no-dynamic-require
+  Tokens = require(path.join(__dirname, 'tokens.json'));
+} catch (e) {
+  Tokens = {};
+}
 
 class TheAwesomeBot {
   constructor(token, discordOpt) {
+    this.bootTime = new Date();
     this.token = token;
     this.client = new Discord.Client(discordOpt || { autoReconnect: true });
     this.settings = Settings;
@@ -14,6 +23,9 @@ class TheAwesomeBot {
 
     // store the RE as they're expensive to create
     this.cmd_re = new RegExp(`^${this.settings.bot_cmd}\\s+([^\\s]+)\\s*([^]*)\\s*`, 'i');
+
+    // flags if connected and client is ready
+    this.isReady = false;
   }
 
   onMessage() {
@@ -69,6 +81,7 @@ class TheAwesomeBot {
       Object.keys(this.commands).filter(cmd =>
         typeof this.commands[cmd].init === 'function')
       .forEach(cmd => this.commands[cmd].init(this));
+      this.isReady = true;
     });
   }
 
@@ -76,12 +89,12 @@ class TheAwesomeBot {
     return ((server, user) => this.client.sendMessage(user, this.usageList));
   }
 
-  static onDisconnected() {
+  onDisconnected() {
     return () =>
       console.warn('Bot has been disconnected from server...');
   }
 
-  static onError() {
+  onError() {
     return ((err) => {
       console.error('error: ', err);
       console.error(err.trace);
@@ -104,7 +117,7 @@ class TheAwesomeBot {
           usageStrs.push(usageObj.toString());
         }
 
-        usageStrs.forEach(u => (this.usageList += `\n- ${this.settings.bot_cmd} ${u}`));
+        this.usageList += usageStrs.reduce((list, str) => list + `\n- ${this.settings.bot_cmd} ${str}`, '');
       }
     });
   }
@@ -123,7 +136,15 @@ class TheAwesomeBot {
       .on('error', this.onError());
 
     console.log('Connecting...');
-    this.client.login(this.token);
+    // return the promise from "login()"
+    return this.client.login(this.token);
+  }
+
+  deinit() {
+    // disconnect gracefully
+    this.isReady = false;
+    // return the promise from "destroy()"
+    return this.client.destroy();
   }
 
   isAdminOrMod(member) {

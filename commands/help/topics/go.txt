@@ -1,0 +1,19 @@
+See these resources and links for learning Go:
+
+Documentation:
+<https://golang.org/doc/>
+
+Official Tour:
+<https://tour.golang.org/welcome/1>
+
+Introductory Video:
+<https://www.youtube.com/watch?v=CF9S4QZuV30>
+
+Godoc
+<https://godoc.org/>
+
+Effective Go <- READ THIS
+<https://golang.org/doc/effective_go.html>
+
+Sentdex - Introductory Go Videos
+<https://www.youtube.com/watch?v=G3PvTWRIhZA&list=PLQVvvaa0QuDeF3hP0wQoSxpkqgRcgxMqX>

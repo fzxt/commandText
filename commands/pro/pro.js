@@ -4,6 +4,7 @@ function fixEscapes(str) {
 
 let proLangRe;
 let pros;
+const proHelpText = {};
 
 function updateProsMatcher() {
   /* eslint global-require: off */
@@ -29,18 +30,19 @@ function updateProsMatcher() {
 
 function getProsOnline(guild) {
   return new Set(guild.members
-    .filter(m => m.roles.find('name', 'Pros') && ['online', 'idle'].includes(m.presence.status))
+    .filter(m => m.roles.find('name', 'Helpers') && ['online', 'idle'].includes(m.presence.status))
     .map(p => p.user.username));
 }
 
 
 function loadAndMatchPros(bot) {
   updateProsMatcher();
-  const helpChannel = bot.client.channels.find('name', 'helpdirectory');
+  const helpChannel = bot.client.channels.find('name', 'help-directory');
 
   return helpChannel.fetchMessages({ limit: 100 })
   .then((messages) => {
     messages.forEach((messageObj) => {
+      proHelpText[messageObj.author.id] = messageObj.content;
       proLangRe.lastIndex = 0;
       while (true) {
         const match = proLangRe.exec(messageObj.content);
@@ -66,14 +68,26 @@ function getPros(bot, lang) {
 
 module.exports = {
   usage: [
-    'please gimme a topic, will\'ya?',
     'pro <topic> - list of people who knows about <topic>',
+    'pro <username mention> - get help directory entry for specific pro',
     'pro reset - reload all the pro data (mod only)',
   ],
 
   run(bot, message, cmdArgs) {
     if (!cmdArgs) {
       return true;
+    }
+
+    if (message.mentions.users.size > 0) {
+      const memberId = message.mentions.users.first().id;
+      if (memberId in proHelpText) {
+        let response = `**Help Directory entry for user ${message.mentions.users.first().username}:**\n`;
+        response += proHelpText[memberId];
+        message.channel.sendMessage(response);
+      } else {
+        message.channel.sendMessage(`Could not find user ${message.mentions.users.first().username} in directory`);
+      }
+      return false;
     }
 
     let lang = cmdArgs.toLowerCase().trim();

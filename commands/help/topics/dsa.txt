@@ -1,0 +1,13 @@
+Use these resources to learn Data Structures and Algorithms:
+
+Free Course - Sedgewick's Coursera Part 1
+<https://www.coursera.org/learn/algorithms-part1>
+
+Free Course - Sedgewick's Coursera Part 2
+<https://www.coursera.org/learn/algorithms-part2>
+
+Paid Book - Sedgewick's Algorithms in Java
+<http://algs4.cs.princeton.edu/home/>
+
+Paid Book - CLRS/Introduction to Algorithms
+<https://mitpress.mit.edu/books/introduction-algorithms>

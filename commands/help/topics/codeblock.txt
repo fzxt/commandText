@@ -1,10 +1,16 @@
-Use codeblocks for formatting code:
-\```<language name>
-<your code here>
+Use codeblocks for formatting code (line breaks matter!):
+\```language_name
+# code here
 \```
 
 For example:
+\```python
+if True:
+    print("Hi!")
+\```
+prints:
 ```python
 if True:
     print("Hi!")
 ```
+You can find the available language names here: <https://highlightjs.readthedocs.io/en/latest/css-classes-reference.html#language-names-and-aliases>

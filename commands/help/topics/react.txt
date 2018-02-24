@@ -1,9 +1,25 @@
 See these links for learning ReactJS/Flux/Redux:
 
-https://facebook.github.io/react/docs/getting-started.html
+Hello World in React
+<https://facebook.github.io/react/docs/hello-world.html>
 
-https://www.youtube.com/watch?v=MhkGQAoc7bc&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b
+Free Course: Get Quickly in Pace with React.js Development
+<https://www.youtube.com/watch?v=MhkGQAoc7bc&list=PLoYCgNOIyGABj2GQSlDRjgvXtqfDxKm5b>
 
-https://www.codecademy.com/learn/react-101
+Free Course: Essential Concepts
+<https://www.codecademy.com/learn/react-101>
 
-https://www.codecademy.com/learn/react-102
+Free Course: Continuation: Lifecycle Methods, Stateless Components and more
+<https://www.codecademy.com/learn/react-102>
+
+Awesome react
+<https://github.com/enaqx/awesome-react>
+
+Redux doc's
+<http://redux.js.org/>
+
+Dan Abramov's free course for redux
+<https://egghead.io/courses/getting-started-with-redux>
+
+React-redux-links
+<https://github.com/markerikson/react-redux-links>

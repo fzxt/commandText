@@ -1,0 +1,16 @@
+Here are some technology podcasts:
+
+*Coder Radio* by Jupiter Broadcasting
+<http://www.jupiterbroadcasting.com/show/coderradio/>
+
+*Talk Python to Me* by Michael Kennedy
+<https://talkpython.fm>
+
+*Simple Programmer* by John Sonmez
+<https://www.youtube.com/playlist?list=PLjwWT1Xy3c4U4xrSdGiN9fh04NjHoNwTq>
+
+*Import This* by Kenneth Reitz
+<https://www.kennethreitz.org/import-this/>
+
+*whiletruefm* by kennethlove, lethargilistic, samwho, and DiLemmA
+<http://whiletrue.fm>

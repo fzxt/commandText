@@ -1,8 +1,37 @@
 See these links/courses for learning PHP:
 
-http://www.w3schools.com/php/
+PHP Official Documentation (select a language on the page)
+<http://php.net/docs.php>
 
-http://php.net/manual/en/tutorial.php
+Learn PHP the right way (online free book)
+<http://www.phptherightway.com>
 
-https://www.codecademy.com/learn/php
+PHP 5 Tutorials
+<https://w3schools.com/php/>
 
+A simple tutorial (good introduction)
+<https://php.net/manual/en/tutorial.php>
+
+Free Course: Fundamental Programming Concepts
+<https://codecademy.com/learn/php>
+
+Codeschool's PHP courses
+<https://www.codeschool.com/search?utf8=%E2%9C%93&query=php>
+
+Beginner PHP at Treehouse
+<https://teamtreehouse.com/tracks/beginner-php>
+
+Intermediate PHP at Treehouse
+<https://teamtreehouse.com/tracks/intermediate-php>
+
+PHP 5: Interactive tutorial
+<http://www.tutorialspoint.com/php/>
+
+
+See these resources for learning what's new in PHP 7:
+
+PHP 7: Up and running
+<https://laracasts.com/series/php7-up-and-running/episodes/1>
+
+PHP 7: Interactive tutorial
+<http://www.tutorialspoint.com/php7/>

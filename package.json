@@ -5,7 +5,7 @@
   "main": "TheAwesomeBot.js",
   "scripts": {
     "start": "node start.js",
-    "test": "echo \"No tests yet :( But let it build!\" && exit 0",
+    "test": "if [ \"$TRAVIS_PULL_REQUEST\" = \"false\" ]; then node test/*.js | tap-summary --no-progress; fi",
     "lint": "eslint"
   },
   "repository": {
@@ -21,13 +21,18 @@
   "dependencies": {
     "cheerio": "^0.22.0",
     "discord.js": "^11.0.0",
-    "request": "^2.79.0"
+    "replit-client": "^0.19.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.0",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "eslint": "^3.0.1",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.9.0"
+    "eslint-plugin-react": "^6.9.0",
+    "tap-summary": "^3.0.1",
+    "tape": "^4.6.3"
   }
 }
