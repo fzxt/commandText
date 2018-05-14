@@ -69,10 +69,10 @@ module.exports = {
     }
 
     findXkcdFromKeywords(cmdArgs).then((data) => {
-      message.channel.sendMessage(data);
+      message.channel.send(data);
     })
     .catch((err) => {
-      message.channel.sendMessage(err);
+      message.channel.send(err);
     });
 
     return false;
