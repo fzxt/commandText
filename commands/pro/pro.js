@@ -39,6 +39,12 @@ function loadAndMatchPros(bot) {
   updateProsMatcher();
   const helpChannel = bot.client.channels.find('name', 'help-directory');
 
+  if (!helpChannel) {
+    const err = new Error('help-directory channel not found');
+    err.intentional = true;
+    return Promise.reject(err);
+  }
+
   return helpChannel.fetchMessages({ limit: 100 })
   .then((messages) => {
     messages.forEach((messageObj) => {
@@ -83,9 +89,9 @@ module.exports = {
       if (memberId in proHelpText) {
         let response = `**Help Directory entry for user ${message.mentions.users.first().username}:**\n`;
         response += proHelpText[memberId];
-        message.channel.sendMessage(response);
+        message.channel.send(response);
       } else {
-        message.channel.sendMessage(`Could not find user ${message.mentions.users.first().username} in directory`);
+        message.channel.send(`Could not find user ${message.mentions.users.first().username} in directory`);
       }
       return false;
     }
@@ -94,7 +100,7 @@ module.exports = {
 
     if (lang === 'reset' && bot.isAdminOrMod(message.member)) {
       loadAndMatchPros(bot).then(() => {
-        message.channel.sendMessage('Pros list refreshed.');
+        message.channel.send('Pros list refreshed.');
         return false;
       })
       .catch((err) => {
@@ -109,7 +115,7 @@ module.exports = {
     lang = ((match && match[1]) || lang).toLowerCase();
 
     const foundPros = getPros(bot, lang);
-    message.channel.sendMessage(foundPros ?
+    message.channel.send(foundPros ?
       `Here are some pros online that can help with **${pros[lang].original}**: \n${foundPros}` :
       `No pros found for ${cmdArgs} :(`);
     return false;
@@ -122,9 +128,10 @@ module.exports = {
         console.log('Done reading in pros from #helpdirectory!');
       })
       .catch((err) => {
-        console.error(err);
-        console.error(err.stack);
+        console.error('[error]', err.message);
+        if (!err.intentional) {
+          console.error(err.stack);
+        }
       });
   },
 };
-

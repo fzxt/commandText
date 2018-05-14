@@ -44,9 +44,8 @@ function getWeatherData(location) {
 
     const offset = weatherData.offset;
     const utcTime = weatherData.currently.time;
-    // datetime is weird in javascript, please do change this part if you can
-    const localTime = new Date(utcTime * 1000);
-    localTime.setHours(localTime.getHours() + offset);
+    const localTime = new Date(1000 * (utcTime + (offset * 60 * 60)));
+
     let dateString;
     // toGMTString prints out timezone of host so we slice it off
     if (offset > 0) {

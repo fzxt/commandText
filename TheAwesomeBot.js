@@ -35,6 +35,11 @@ class TheAwesomeBot {
         return;
       }
 
+      // don't respond to dm
+      if (message.channel.type === 'dm') {
+        return;
+      }
+
       // check if message is a command
       const cmdMatch = message.cleanContent.match(this.cmd_re);
 
@@ -44,7 +49,7 @@ class TheAwesomeBot {
           let helpText = 'maybe try these valid commands? *kthnxbye!*\n\n```';
           helpText += this.usageList;
           helpText += '```';
-          message.channel.sendMessage(helpText);
+          message.channel.send(helpText);
         }
         return;
       }
@@ -58,7 +63,7 @@ class TheAwesomeBot {
       try {
         showUsage = this.commands[cmd].run(this, message, cmdArgs);
       } catch (err) {
-        message.channel.sendMessage('There was an error running the command:\n' +
+        message.channel.send('There was an error running the command:\n' +
           '```\n' + err.toString() + '\n```');
         console.error(err);
         console.error(err.stack);
@@ -69,7 +74,7 @@ class TheAwesomeBot {
         if (typeof usage !== 'string') {
           usage = usage.join('\n');
         }
-        message.channel.sendMessage('```\n' + usage + '\n```');
+        message.channel.send('```\n' + usage + '\n```');
       }
     };
   }
@@ -86,7 +91,7 @@ class TheAwesomeBot {
   }
 
   serverNewMember() {
-    return ((server, user) => this.client.sendMessage(user, this.usageList));
+    return ((server, user) => this.client.send(user, this.usageList));
   }
 
   onDisconnected() {
@@ -156,4 +161,3 @@ class TheAwesomeBot {
 }
 
 module.exports = TheAwesomeBot;
-

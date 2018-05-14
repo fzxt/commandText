@@ -63,11 +63,11 @@ const commands = {
     let [, topic, link, user] = args.split(' '); // eslint-disable-line prefer-const
 
     if (!topic || !link) {
-      return message.channel.sendMessage('err, please provide topic and link!');
+      return message.channel.send('err, please provide topic and link!');
     }
 
     if (link.indexOf('http://') === -1 && link.indexOf('https://') === -1) {
-      return message.channel.sendMessage('a valid link must be supplied (starting with http/https)!');
+      return message.channel.send('a valid link must be supplied (starting with http/https)!');
     }
 
     user = message.mentions.users.first();
@@ -93,14 +93,14 @@ const commands = {
       streams[topic][user.id].link = link;
 
       existingChannel.setTopic(link).catch(err =>
-        existingChannel.sendMessage('There was an error setting the existings channel topic!'));
+        existingChannel.send('There was an error setting the existings channel topic!'));
 
-      return message.channel.sendMessage('Channel already exists.. Updated stream link!');
+      return message.channel.send('Channel already exists.. Updated stream link!');
     }
     return createChannel(channelFormat, bot, message, topic, user.id)
       .then(createdChannel => setTopicToLink(createdChannel, link, bot, topic, user.id))
-      .then(channelWithTopic => message.channel.sendMessage(`Created ${channelWithTopic}!`))
-      .catch(err => message.channel.sendMessage(`Sorry, could not create channel (${err})`));
+      .then(channelWithTopic => message.channel.send(`Created ${channelWithTopic}!`))
+      .catch(err => message.channel.send(`Sorry, could not create channel (${err})`));
   },
 
   remove: function handleRemoveStream(bot, message) {
@@ -110,7 +110,7 @@ const commands = {
     const id = user ? user.id : message.author.id;
 
     if (!bot.isAdminOrMod(message.member) && id !== message.author.id) {
-      message.channel.sendMessage('Only admins or mods can remove others\' streams.');
+      message.channel.send('Only admins or mods can remove others\' streams.');
       return;
     }
 
@@ -121,13 +121,13 @@ const commands = {
         deleteStreamInObject(topic, id);
 
         channelToDelete.delete().catch(err =>
-          message.channel.sendMessage('Sorry, could not delete channel'));
+          message.channel.send('Sorry, could not delete channel'));
 
-        message.channel.sendMessage(
+        message.channel.send(
           `Removed ${user || message.author} from active streamers list and deleted #${channelToDelete.name}`);
       } else {
         // user has no stream in this topic
-        // return message.channel.sendMessage(`Could not find ${user}`);
+        // return message.channel.send(`Could not find ${user}`);
       }
     });
   },
@@ -138,7 +138,7 @@ const commands = {
     const topics = Object.keys(streams);
 
     if (topics.length === 0) {
-      return message.channel.sendMessage('No streams! :frowning:');
+      return message.channel.send('No streams! :frowning:');
     }
 
     topics.forEach((topic) => {
@@ -151,19 +151,22 @@ const commands = {
       });
     });
 
-    return message.channel.sendMessage(buildMessage);
+    return message.channel.send(buildMessage);
   },
 
   removeall: function removeAllStreams(bot, message) {
     if (message && !bot.isAdminOrMod(message.member)) {
-      message.channel.sendMessage('Only Admins or Mods can delete all stream channels');
+      message.channel.send('Only Admins or Mods can delete all stream channels');
       return;
     }
 
     console.log('Removing all stream channels..');
-    bot.client.guilds.first().channels.filter(channel =>
-      channel && channel.name !== undefined && channel.name.startsWith('stream'))
-    .forEach(channel => channel.delete());
+
+    bot.client.guilds.array().forEach((guild) => {
+      guild.channels.filter(channel =>
+        channel && channel.name !== undefined && channel.name.startsWith('stream'))
+      .forEach(channel => channel.delete());
+    });
 
     Object.keys(streams).forEach(topic => delete streams[topic]);
   },
@@ -188,4 +191,3 @@ module.exports = {
     commands.removeall(bot);
   },
 };
-
